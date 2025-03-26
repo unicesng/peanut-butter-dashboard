@@ -44,53 +44,31 @@ PREFIX = 'real-time-data/'
 logger.info(f"Will store data in bucket: {BUCKET_NAME} with prefix: {PREFIX}")
 
 def upload_to_s3(data, timestamp):
-    """Upload data to S3 bucket with enhanced logging"""
+    """Upload data to S3 bucket with improved folder structure"""
     try:
-        # Create a unique filename for the data
-        date_part = timestamp.split('T')[0]
-        hour_part = timestamp.split('T')[1].split(':')[0]
+        # Parse the timestamp
+        dt = datetime.fromisoformat(timestamp)
+        date_part = dt.strftime('%Y-%m-%d')
+        hour_part = dt.strftime('%H')
         
-        # Generate a unique file key
-        file_key = f"{PREFIX}{date_part}/{hour_part}/data_{uuid.uuid4()}.json"
-        logger.info(f"Preparing to upload data to S3 path: {file_key}")
+        # Get the data source
+        source = data.get('source', 'unknown')
         
-        # Log data size
-        json_data = json.dumps(data)
-        data_size = len(json_data)
-        logger.info(f"Data size: {data_size} bytes")
-        
-        # Start upload
-        logger.info(f"Starting S3 upload to bucket: {BUCKET_NAME}")
-        start_time = time.time()
+        # Generate a unique file key with better structure
+        file_key = f"real-time-data/{source}/{date_part}/{hour_part}/data_{uuid.uuid4()}.json"
         
         # Upload to S3
-        response = s3_client.put_object(
+        s3_client.put_object(
             Bucket=BUCKET_NAME,
             Key=file_key,
-            Body=json_data,
+            Body=json.dumps(data),
             ContentType='application/json'
         )
         
-        # Log upload result
-        end_time = time.time()
-        upload_time = end_time - start_time
-        
-        if response['ResponseMetadata']['HTTPStatusCode'] == 200:
-            logger.info(f"✅ SUCCESS: Data uploaded to S3: s3://{BUCKET_NAME}/{file_key}")
-            logger.info(f"Upload completed in {upload_time:.2f} seconds")
-            logger.info(f"S3 response: {response['ResponseMetadata']['HTTPStatusCode']}")
-            return True
-        else:
-            logger.error(f"❌ FAILED: S3 upload returned unexpected status: {response['ResponseMetadata']['HTTPStatusCode']}")
-            logger.error(f"Full response: {response}")
-            return False
-            
-    except boto3.exceptions.S3UploadFailedError as e:
-        logger.error(f"❌ S3 UPLOAD ERROR: {e}")
-        return False
+        print(f"Data uploaded to S3: s3://{BUCKET_NAME}/{file_key}")
+        return True
     except Exception as e:
-        logger.error(f"❌ UNEXPECTED ERROR uploading to S3: {e}")
-        logger.exception("Full stack trace:")
+        print(f"Error uploading to S3: {e}")
         return False
 
 def process_message(message):
