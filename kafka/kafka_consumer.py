@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 logger.info("Initializing Kafka consumer...")
 consumer = KafkaConsumer(
     'real-time-data',
-    bootstrap_servers=['localhost:9092'],
+    bootstrap_servers=['172.17.0.1:9092'],
     auto_offset_reset='earliest',
     enable_auto_commit=True,
     group_id='real-time-data-group',
