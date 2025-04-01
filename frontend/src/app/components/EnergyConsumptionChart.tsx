@@ -18,21 +18,21 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { household: "A-1", total: 186, average: 80 },
+  { household: "A-2", total: 305, average: 200 },
+  { household: "A-3", total: 237, average: 120 },
+  { household: "A-4", total: 73, average: 190 },
+  { household: "A-5", total: 209, average: 130 },
+  { household: "A-6", total: 214, average: 140 },
 ];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  total: {
+    label: "Total",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  average: {
+    label: "Average",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
@@ -41,15 +41,15 @@ export function EnergyConsumptionChart() {
   return (
     <Card className="w-1/3 m-2">
       <CardHeader>
-        <CardTitle>Energy Consumption Demand</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Daily Energy Demand (kWh)</CardTitle>
+        <CardDescription>Based on ACORN Type</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="household"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
@@ -59,17 +59,17 @@ export function EnergyConsumptionChart() {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="total" fill="var(--color-total)" radius={4} />
+            <Bar dataKey="average" fill="var(--color-average)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending up by 5.2% this household <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total energy consumption by households for the last 6 months
+          Showing total energy consumption by households for the last 6 households
         </div>
       </CardFooter>
     </Card>

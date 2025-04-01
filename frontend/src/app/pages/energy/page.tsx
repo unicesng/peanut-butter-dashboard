@@ -1,7 +1,11 @@
+import { AverageDailyConsumption } from "@/app/components/AverageDailyConsumption";
 import { EnergyConsumptionChart } from "@/app/components/EnergyConsumptionChart";
+import { EnergyCostCard } from "@/app/components/EnergyCostCard";
 import { EnergyDistributionChart } from "@/app/components/EnergyDistributionChart";
 import { EnergyFactorsChart } from "@/app/components/EnergyFactorsChart";
 import { ProjectedEnergyConsumptionChart } from "@/app/components/ProjectedEnergyConsumptionChart";
+import { EnergyAnomalyCard } from "@/app/components/EnergyAnomalyCard";
+
 export default function Energy() {
   return (
     <section className="bg-white dark:bg-gray-900 ">
@@ -11,6 +15,11 @@ export default function Energy() {
           Real-time monitoring of energy metrics with AI-powered insights
         </p>
         <hr className="h-px my-4 bg-gray-400 border-0" />
+        <div className="flex m-2">
+          <AverageDailyConsumption />
+          <EnergyAnomalyCard />
+          <EnergyCostCard />
+        </div>
         <div className="flex m-2">
           <EnergyConsumptionChart />
           <EnergyDistributionChart />

@@ -18,10 +18,10 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
+  { browser: "income", visitors: 275, fill: "var(--color-income)" },
+  { browser: "location", visitors: 200, fill: "var(--color-location)" },
+  { browser: "houseType", visitors: 187, fill: "var(--color-houseType)" },
+  { browser: "weather", visitors: 173, fill: "var(--color-weather)" },
   { browser: "other", visitors: 90, fill: "var(--color-other)" },
 ];
 
@@ -29,20 +29,20 @@ const chartConfig = {
   visitors: {
     label: "Visitors",
   },
-  chrome: {
-    label: "Chrome",
+  income: {
+    label: "Income",
     color: "hsl(var(--chart-1))",
   },
-  safari: {
-    label: "Safari",
+  location: {
+    label: "Location",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
+  houseType: {
+    label: "House Type",
     color: "hsl(var(--chart-3))",
   },
-  edge: {
-    label: "Edge",
+  weather: {
+    label: "Weather",
     color: "hsl(var(--chart-4))",
   },
   other: {
