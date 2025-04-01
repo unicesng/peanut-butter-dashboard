@@ -7,7 +7,9 @@ export default function Home() {
           className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
           role="alert"
         >
-          <span className="text-sm font-medium px-4">Check out UK's real time energy consumption metrics</span>
+          <span className="text-sm font-medium px-4">
+            Check out UK's real time energy consumption metrics
+          </span>
           <svg
             className="ml-2 w-5 h-5"
             fill="currentColor"
@@ -22,11 +24,14 @@ export default function Home() {
           </svg>
         </a>
         <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-          We democratise big data for everyone
+          We democratise
+          <span className="text-blue-600 dark:text-blue-500">  big data  </span>
+          for everyone
         </h1>
         <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
-          Here at Peanut Butter Dashboard we share insights focusing on energy and future technological trends
-          to unlock long-term value and drive economic growth.
+          Here at Peanut Butter Dashboard we share insights focusing on energy
+          and future technological trends to unlock long-term value and drive
+          economic growth.
         </p>
         <div className="m-3"></div>
         <div className="px-4 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg lg:px-36">
