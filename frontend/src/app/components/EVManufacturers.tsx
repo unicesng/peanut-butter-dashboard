@@ -41,7 +41,7 @@ const chartConfig = {
 
 export function EVManufacturers() {
   return (
-    <Card className="m-2 w-1/4">
+    <Card className="m-2 w-1/3">
       <CardHeader>
         <CardTitle>Market Share of EV Manufacturers</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

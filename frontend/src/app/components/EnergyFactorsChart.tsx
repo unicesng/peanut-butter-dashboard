@@ -18,16 +18,16 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-  { browser: "income", visitors: 275, fill: "var(--color-income)" },
-  { browser: "location", visitors: 200, fill: "var(--color-location)" },
-  { browser: "houseType", visitors: 187, fill: "var(--color-houseType)" },
-  { browser: "weather", visitors: 173, fill: "var(--color-weather)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
+  { factors: "income", percentage: 25, fill: "var(--color-income)" },
+  { factors: "location", percentage: 10, fill: "var(--color-location)" },
+  { factors: "houseType", percentage: 18, fill: "var(--color-houseType)" },
+  { factors: "weather", percentage: 17, fill: "var(--color-weather)" },
+  { factors: "other", percentage: 9, fill: "var(--color-other)" },
 ];
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  percentage: {
+    label: "Percentage",
   },
   income: {
     label: "Income",
@@ -69,7 +69,7 @@ export function EnergyFactorsChart() {
             }}
           >
             <YAxis
-              dataKey="browser"
+              dataKey="factors"
               type="category"
               tickLine={false}
               tickMargin={10}
@@ -78,12 +78,12 @@ export function EnergyFactorsChart() {
                 chartConfig[value as keyof typeof chartConfig]?.label
               }
             />
-            <XAxis dataKey="visitors" type="number" hide />
+            <XAxis dataKey="percentage" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="visitors" layout="vertical" radius={5} />
+            <Bar dataKey="percentage" layout="vertical" radius={5} />
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -92,7 +92,7 @@ export function EnergyFactorsChart() {
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing total percentage for the last 6 months
         </div>
       </CardFooter>
     </Card>
