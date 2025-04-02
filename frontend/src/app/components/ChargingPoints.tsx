@@ -719,7 +719,7 @@ const backgroundTopology = {
 };
 
 export default function ChargingPoints() {
-    const [options, setOptions] = useState<AgChartOptions>({
+    const [options] = useState<AgChartOptions>({
     title: {
       text: "UK Cities",
     },
@@ -746,7 +746,7 @@ export default function ChargingPoints() {
           60 kWh
         </CardTitle>
         <div>
-          <AgCharts options={options as any} />
+          <AgCharts options={options} />
         </div>
       </CardHeader>
     </Card>
