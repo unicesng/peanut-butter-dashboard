@@ -1,5 +1,5 @@
 import { AnnualGrowthRateOfEV } from "@/app/components/AnnualGrowthRateEV";
-import ChargingPoints from "@/app/components/ChargingPoints";
+// import ChargingPoints from "@/app/components/ChargingPoints";
 import { EVAdoptionRateCard } from "@/app/components/EVAdoptionRateCard";
 import { EVManufacturers } from "@/app/components/EVManufacturers";
 import ForecastEVTrends from "@/app/components/ForecastEVTrends";
