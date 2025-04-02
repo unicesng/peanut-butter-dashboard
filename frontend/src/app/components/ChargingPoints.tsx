@@ -737,7 +737,7 @@ export default function ChargingPoints() {
     ],
   });
   return (
-    <Card className="m-2 w-2/3">
+    <Card className="m-2 w-1/3">
       <CardHeader className="relative">
         <CardDescription>
           Charging Points in the UK

@@ -20,10 +20,6 @@ const data = [
   { color: "bg-emerald-500", tooltip: "Tracker Info" },
   { color: "bg-red-500", tooltip: "Tracker Info" },
   { color: "bg-emerald-500", tooltip: "Tracker Info" },
-  { color: "bg-emerald-500", tooltip: "Tracker Info" },
-  { color: "bg-yellow-500", tooltip: "Tracker Info" },
-  { color: "bg-emerald-500", tooltip: "Tracker Info" },
-  { color: "bg-emerald-500", tooltip: "Tracker Info" },
   { color: "bg-red-500", tooltip: "Peak" },
   { color: "bg-emerald-500", tooltip: "Tracker Info" },
 ];

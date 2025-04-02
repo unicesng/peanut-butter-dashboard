@@ -21,11 +21,9 @@ export default function ElectricVehicles() {
           <EVAdoptionRateCard />
         </div>
         <div className="flex">
-          {/* <div className="w-1/3"> */}
             <EVManufacturers />
             <ProjectedEVGrowth />
             <ChargingPoints />
-          {/* </div> */}
         </div>
         <div>
           <ForecastEVTrends />
