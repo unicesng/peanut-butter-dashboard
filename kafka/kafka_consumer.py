@@ -8,6 +8,7 @@ import logging
 import os
 from dotenv import load_dotenv
 load_dotenv()
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
@@ -16,17 +17,31 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Kafka topic names
+HOUSEHOLD_TOPIC = 'smart-meter-readings'
+AGGREGATE_TOPIC = 'aggregate-consumption'
+
 # Configure Kafka consumer
-logger.info("Initializing Kafka consumer...")
-consumer = KafkaConsumer(
-    'real-time-data',
+logger.info("Initializing Kafka consumers...")
+household_consumer = KafkaConsumer(
+    HOUSEHOLD_TOPIC,
     bootstrap_servers=['localhost:9092'],
     auto_offset_reset='earliest',
     enable_auto_commit=True,
-    group_id='real-time-data-group',
+    group_id='smart-meter-household-group',
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
 )
-logger.info("Kafka consumer initialized and configured to connect to localhost:9092")
+
+aggregate_consumer = KafkaConsumer(
+    AGGREGATE_TOPIC,
+    bootstrap_servers=['localhost:9092'],
+    auto_offset_reset='earliest',
+    enable_auto_commit=True,
+    group_id='smart-meter-aggregate-group',
+    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+)
+
+logger.info(f"Kafka consumers initialized for topics: {HOUSEHOLD_TOPIC} and {AGGREGATE_TOPIC}")
 
 # Configure S3 client
 logger.info("Initializing S3 client...")
@@ -40,19 +55,44 @@ logger.info("S3 client initialized for region us-east-1")
 
 # S3 bucket details
 BUCKET_NAME = 'peanut-butter-project'
-PREFIX = 'real-time-data/'
-logger.info(f"Will store data in bucket: {BUCKET_NAME} with prefix: {PREFIX}")
+HOUSEHOLD_PREFIX = 'smart-meter-data/household/'
+AGGREGATE_PREFIX = 'smart-meter-data/aggregate/'
+ANOMALY_PREFIX = 'smart-meter-data/anomalies/'
+logger.info(f"Will store data in bucket: {BUCKET_NAME}")
 
-def upload_to_s3(data, timestamp):
-    """Upload data to S3 bucket with enhanced logging"""
+def upload_to_s3(data, prefix, timestamp, data_type):
+    """Upload data to S3 bucket with appropriate prefix"""
     try:
-        # Create a unique filename for the data
-        date_part = timestamp.split('T')[0]
-        hour_part = timestamp.split('T')[1].split(':')[0]
+        # Parse the timestamp
+        dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+        date_part = dt.strftime('%Y-%m-%d')
+        hour_part = dt.strftime('%H')
         
         # Generate a unique file key
-        file_key = f"{PREFIX}{date_part}/{hour_part}/data_{uuid.uuid4()}.json"
-        logger.info(f"Preparing to upload data to S3 path: {file_key}")
+        file_key = f"{prefix}{date_part}/{hour_part}/data_{uuid.uuid4()}.json"
+        
+        if data_type == 'household':
+            # For household data, include ACORN group and household ID in path
+            acorn_group = data.get('acorn_group', 'unknown').replace(' ', '_').lower()
+            household_id = data.get('household_id', 'unknown')
+            file_key = f"{prefix}{acorn_group}/{date_part}/{household_id}_{dt.strftime('%H%M%S')}_{uuid.uuid4()}.json"
+            
+            # If it's an anomaly, also save to anomaly folder
+            if data.get('is_anomaly', False):
+                anomaly_key = f"{ANOMALY_PREFIX}{date_part}/{household_id}_{dt.strftime('%H%M%S')}_{uuid.uuid4()}.json"
+                logger.info(f"Detected anomaly, also saving to: {anomaly_key}")
+                s3_client.put_object(
+                    Bucket=BUCKET_NAME,
+                    Key=anomaly_key,
+                    Body=json.dumps(data),
+                    ContentType='application/json'
+                )
+                
+        elif data_type == 'aggregate':
+            # For aggregate data, organize by date and hour
+            file_key = f"{prefix}{date_part}/aggregate_{dt.strftime('%H%M%S')}.json"
+        
+        logger.info(f"Preparing to upload {data_type} data to S3 path: {file_key}")
         
         # Log data size
         json_data = json.dumps(data)
@@ -76,9 +116,8 @@ def upload_to_s3(data, timestamp):
         upload_time = end_time - start_time
         
         if response['ResponseMetadata']['HTTPStatusCode'] == 200:
-            logger.info(f"✅ SUCCESS: Data uploaded to S3: s3://{BUCKET_NAME}/{file_key}")
+            logger.info(f"✅ SUCCESS: {data_type.capitalize()} data uploaded to S3: s3://{BUCKET_NAME}/{file_key}")
             logger.info(f"Upload completed in {upload_time:.2f} seconds")
-            logger.info(f"S3 response: {response['ResponseMetadata']['HTTPStatusCode']}")
             return True
         else:
             logger.error(f"❌ FAILED: S3 upload returned unexpected status: {response['ResponseMetadata']['HTTPStatusCode']}")
@@ -93,52 +132,123 @@ def upload_to_s3(data, timestamp):
         logger.exception("Full stack trace:")
         return False
 
-def process_message(message):
-    """Process each message from Kafka with enhanced logging"""
-    # Log message receipt
+def process_household_message(message):
+    """Process household-level smart meter reading"""
     logger.info("-----------------------------------------------------")
-    logger.info("📨 MESSAGE RECEIVED from Kafka")
+    logger.info("📨 HOUSEHOLD MESSAGE RECEIVED from Kafka")
     logger.info(f"Topic: {message.topic}, Partition: {message.partition}, Offset: {message.offset}")
     
     # Extract data
     data = message.value
-    logger.info(f"Message keys: {', '.join(data.keys())}")
     
     # Get timestamp
-    timestamp = data.get('timestamp', datetime.now().isoformat())
-    logger.info(f"Message timestamp: {timestamp}")
+    timestamp = data.get('datetime', datetime.now().isoformat())
+    household_id = data.get('household_id', 'unknown')
+    acorn_group = data.get('acorn_group', 'unknown')
+    consumption = data.get('consumption_kwh', 0)
+    is_anomaly = data.get('is_anomaly', False)
+    
+    logger.info(f"Household: {household_id}, ACORN: {acorn_group}")
+    logger.info(f"Timestamp: {timestamp}, Consumption: {consumption} kWh, Anomaly: {is_anomaly}")
     
     # Upload the data to S3
-    logger.info("Attempting to store message in S3...")
-    success = upload_to_s3(data, timestamp)
+    logger.info("Storing household reading in S3...")
+    success = upload_to_s3(data, HOUSEHOLD_PREFIX, timestamp, 'household')
     
     if success:
-        logger.info("✅ Message successfully processed and stored in S3")
+        logger.info("✅ Household reading successfully stored in S3")
     else:
-        logger.error("❌ Failed to process and store message")
+        logger.error("❌ Failed to store household reading")
     
     logger.info("-----------------------------------------------------")
 
-if __name__ == "__main__":
-
-    logger.info("🚀 Starting Kafka consumer to store data in S3...")
-    logger.info(f"Listening for messages on topic: real-time-data")
-    logger.info("Waiting for messages... (Press Ctrl+C to exit)")
+def process_aggregate_message(message):
+    """Process aggregate consumption data"""
+    logger.info("=====================================================")
+    logger.info("📊 AGGREGATE MESSAGE RECEIVED from Kafka")
+    logger.info(f"Topic: {message.topic}, Partition: {message.partition}, Offset: {message.offset}")
     
-    # Keep track of message count
+    # Extract data
+    data = message.value
+    
+    # Get timestamp
+    timestamp = data.get('datetime', datetime.now().isoformat())
+    num_households = data.get('num_households', 0)
+    total_consumption = data.get('total_consumption_kwh', 0)
+    avg_consumption = data.get('average_consumption_kwh', 0)
+    anomaly_count = data.get('anomaly_count', 0)
+    
+    logger.info(f"Timestamp: {timestamp}")
+    logger.info(f"Households: {num_households}, Total: {total_consumption} kWh, Avg: {avg_consumption} kWh")
+    logger.info(f"Anomalies: {anomaly_count} ({data.get('anomaly_percentage', 0)}%)")
+    
+    # Upload the data to S3
+    logger.info("Storing aggregate data in S3...")
+    success = upload_to_s3(data, AGGREGATE_PREFIX, timestamp, 'aggregate')
+    
+    if success:
+        logger.info("✅ Aggregate data successfully stored in S3")
+    else:
+        logger.error("❌ Failed to store aggregate data")
+    
+    logger.info("=====================================================")
+
+def run_consumers():
+    """Run both consumers in parallel using threads"""
+    from threading import Thread
+    
+    # Create threads for both consumers
+    household_thread = Thread(target=run_household_consumer)
+    aggregate_thread = Thread(target=run_aggregate_consumer)
+    
+    # Start both threads
+    household_thread.start()
+    aggregate_thread.start()
+    
+    # Wait for both threads to complete
+    household_thread.join()
+    aggregate_thread.join()
+
+def run_household_consumer():
+    logger.info(f"🏠 Starting Kafka consumer for household data on topic: {HOUSEHOLD_TOPIC}")
+    
     message_count = 0
     start_time = datetime.now()
     
     try:
-        # Process messages
-        for message in consumer:
+        for message in household_consumer:
             message_count += 1
-            logger.info(f"Processing message #{message_count}")
-            process_message(message)
+            logger.info(f"Processing household message #{message_count}")
+            process_household_message(message)
     except KeyboardInterrupt:
         runtime = datetime.now() - start_time
-        logger.info(f"👋 Consumer stopped by user after {runtime}")
+        logger.info(f"👋 Household consumer stopped after {runtime}")
         logger.info(f"Processed {message_count} messages")
     except Exception as e:
-        logger.error(f"❌ FATAL ERROR: {e}")
+        logger.error(f"❌ HOUSEHOLD CONSUMER ERROR: {e}")
         logger.exception("Full stack trace:")
+
+def run_aggregate_consumer():
+    logger.info(f"📊 Starting Kafka consumer for aggregate data on topic: {AGGREGATE_TOPIC}")
+    
+    message_count = 0
+    start_time = datetime.now()
+    
+    try:
+        for message in aggregate_consumer:
+            message_count += 1
+            logger.info(f"Processing aggregate message #{message_count}")
+            process_aggregate_message(message)
+    except KeyboardInterrupt:
+        runtime = datetime.now() - start_time
+        logger.info(f"👋 Aggregate consumer stopped after {runtime}")
+        logger.info(f"Processed {message_count} messages")
+    except Exception as e:
+        logger.error(f"❌ AGGREGATE CONSUMER ERROR: {e}")
+        logger.exception("Full stack trace:")
+
+if __name__ == "__main__":
+    logger.info("🚀 Starting Smart Meter Data Kafka consumers...")
+    logger.info("Consumers will store data in S3 for monitoring and ML analysis")
+    
+    run_consumers()
