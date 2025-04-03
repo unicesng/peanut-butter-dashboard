@@ -94,20 +94,14 @@ def upload_to_s3(data, prefix, timestamp, data_type):
         
         logger.info(f"Preparing to upload {data_type} data to S3 path: {file_key}")
         
-        # Log data size
-        json_data = json.dumps(data)
-        data_size = len(json_data)
-        logger.info(f"Data size: {data_size} bytes")
-        
-        # Start upload
-        logger.info(f"Starting S3 upload to bucket: {BUCKET_NAME}")
-        start_time = time.time()
+        # Generate a unique file key with better structure
+        file_key = f"real-time-data/{source}/{date_part}/{hour_part}/data_{uuid.uuid4()}.json"
         
         # Upload to S3
-        response = s3_client.put_object(
+        s3_client.put_object(
             Bucket=BUCKET_NAME,
             Key=file_key,
-            Body=json_data,
+            Body=json.dumps(data),
             ContentType='application/json'
         )
         
@@ -128,8 +122,7 @@ def upload_to_s3(data, prefix, timestamp, data_type):
         logger.error(f"❌ S3 UPLOAD ERROR: {e}")
         return False
     except Exception as e:
-        logger.error(f"❌ UNEXPECTED ERROR uploading to S3: {e}")
-        logger.exception("Full stack trace:")
+        print(f"Error uploading to S3: {e}")
         return False
 
 def process_household_message(message):
