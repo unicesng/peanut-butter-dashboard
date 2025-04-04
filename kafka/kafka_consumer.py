@@ -61,25 +61,27 @@ ANOMALY_PREFIX = 'smart-meter-data/anomalies/'
 logger.info(f"Will store data in bucket: {BUCKET_NAME}")
 
 def upload_to_s3(data, prefix, timestamp, data_type):
-    """Upload data to S3 bucket with appropriate prefix"""
+    """Upload data to S3 bucket with appropriate prefix and timestamp-based filenames"""
     try:
+        start_time = time.time()  # Start timing the upload
+        
         # Parse the timestamp
         dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
         date_part = dt.strftime('%Y-%m-%d')
-        hour_part = dt.strftime('%H')
+        time_part = dt.strftime('%H%M%S')
         
-        # Generate a unique file key
-        file_key = f"{prefix}{date_part}/{hour_part}/data_{uuid.uuid4()}.json"
-        
+        # Generate a filename with timestamp to ensure uniqueness
         if data_type == 'household':
             # For household data, include ACORN group and household ID in path
             acorn_group = data.get('acorn_group', 'unknown').replace(' ', '_').lower()
             household_id = data.get('household_id', 'unknown')
-            file_key = f"{prefix}{acorn_group}/{date_part}/{household_id}_{dt.strftime('%H%M%S')}_{uuid.uuid4()}.json"
+            
+            # Create a flat structure with timestamp in filename
+            file_key = f"{prefix}{acorn_group}/{date_part}/household_{household_id}_{time_part}.json"
             
             # If it's an anomaly, also save to anomaly folder
             if data.get('is_anomaly', False):
-                anomaly_key = f"{ANOMALY_PREFIX}{date_part}/{household_id}_{dt.strftime('%H%M%S')}_{uuid.uuid4()}.json"
+                anomaly_key = f"{ANOMALY_PREFIX}{date_part}/anomaly_{household_id}_{time_part}.json"
                 logger.info(f"Detected anomaly, also saving to: {anomaly_key}")
                 s3_client.put_object(
                     Bucket=BUCKET_NAME,
@@ -89,16 +91,13 @@ def upload_to_s3(data, prefix, timestamp, data_type):
                 )
                 
         elif data_type == 'aggregate':
-            # For aggregate data, organize by date and hour
-            file_key = f"{prefix}{date_part}/aggregate_{dt.strftime('%H%M%S')}.json"
+            # For aggregate data, use a flat structure with timestamp in filename
+            file_key = f"{prefix}{date_part}/aggregate_{time_part}.json"
         
-        logger.info(f"Preparing to upload {data_type} data to S3 path: {file_key}")
-        
-        # Generate a unique file key with better structure
-        file_key = f"real-time-data/{source}/{date_part}/{hour_part}/data_{uuid.uuid4()}.json"
+        logger.info(f"Uploading {data_type} data to S3 path: {file_key}")
         
         # Upload to S3
-        s3_client.put_object(
+        response = s3_client.put_object(
             Bucket=BUCKET_NAME,
             Key=file_key,
             Body=json.dumps(data),
@@ -122,7 +121,7 @@ def upload_to_s3(data, prefix, timestamp, data_type):
         logger.error(f"❌ S3 UPLOAD ERROR: {e}")
         return False
     except Exception as e:
-        print(f"Error uploading to S3: {e}")
+        logger.error(f"Error uploading to S3: {e}")
         return False
 
 def process_household_message(message):

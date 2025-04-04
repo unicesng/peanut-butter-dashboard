@@ -44,6 +44,19 @@ export default function Navbar() {
                 Electric Vehicles
               </Link>
             </li>
+            <li>
+              <Link
+                href="/pages/dashboard"
+                className={`block py-2 px-3 rounded-sm md:p-0 text-lg ${
+                  activeTab === "dashboard"
+                    ? "text-blue-700 dark:text-blue-500"
+                    : "text-black dark:text-white"
+                }`}
+                onClick={() => setActiveTab("dashboard")}
+              >
+                Dashboard
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
