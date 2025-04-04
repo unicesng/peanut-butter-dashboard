@@ -1,8 +1,7 @@
 from fastapi import FastAPI
-from .functions import averageDailyConsumption
+from app.functions.energy import app as energy_app
 
 app = FastAPI()
 
 # Include routers from separate files
-app.include_router(energy.router, prefix="/api/energy", tags=["Energy"])
-app.include_router(ev.router, prefix="/api/ev", tags=["EV"])
+app.include_router(energy_app, prefix="/energy")
