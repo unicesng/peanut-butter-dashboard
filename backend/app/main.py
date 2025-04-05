@@ -13,6 +13,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers from separate files
 app.include_router(energy_app, prefix="/energy")
-app.include_router(energy_app, prefix="/ev")
+app.include_router(ev_app, prefix="/ev")
