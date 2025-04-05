@@ -21,17 +21,17 @@ async def count():
     return rows
 
 @energy_app.get("/avg-daily-consumption")
-async def count():
+async def avgDailyConsumption():
     conn = get_redshift_connection()
     cursor = conn.cursor()
-    query1 = """
+    query = """
         SELECT EXTRACT(YEAR FROM DAY) AS year, AVG(energy_mean) AS avg_value
         FROM daily_dataset
         GROUP BY EXTRACT(YEAR FROM DAY)
         ORDER BY year DESC
         LIMIT 2
     """
-    cursor.execute(query1)
+    cursor.execute(query)
     rows = cursor.fetchall()
     
     if len(rows) < 2:
@@ -51,3 +51,34 @@ async def count():
         "average": round(latest_average,5),
         "change": round(change,1)
     }
+
+@energy_app.get("/energy-anomaly")
+async def energyAnomaly():
+    conn = get_redshift_connection()
+    cursor = conn.cursor()
+    query = """
+        SELECT day, SUM(energy_max) AS energy_max
+        FROM daily_dataset
+        GROUP BY day
+        ORDER BY day desc
+        LIMIT 10;
+    """
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    data = []
+
+    for row in rows[::-1]:
+        day = row[0]
+        energy_max = row[1]
+        
+        if energy_max > 4500:
+            data.append({"date": day, "tooltip": "Critically high/Peak"})
+        elif energy_max > 2500:
+            data.append({"date": day, "tooltip": "Moderate"})
+        else:
+            data.append({"date": day, "tooltip": "Low"})
+
+    conn.close()
+
+    return data

@@ -13,13 +13,13 @@ import {
 import { GetAverageDailyConsumption } from "@/api/energyApis";
 import { useEffect, useState } from "react";
 
-interface ChartData {
+interface AverageDailyConsumptionChartData {
   average: number;
   change: number;
 }
 
 export function AverageDailyConsumption() {
-  const [chartData, setChartData] = useState<ChartData>({ average: 0, change: 0 });
+  const [chartData, setChartData] = useState<AverageDailyConsumptionChartData>({ average: 0, change: 0 });
 
   useEffect(() => {
     fetchData();
