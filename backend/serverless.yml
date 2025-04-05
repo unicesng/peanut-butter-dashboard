@@ -4,6 +4,8 @@ provider:
   name: aws
   runtime: python3.9
   region: us-east-1
+  deploymentBucket:
+    name: peanut-butter-serverless-deployment-bucket
 
 functions:
   healthCheck:
@@ -23,12 +25,12 @@ plugins:
 custom:
   wsgi:
     app: app.main.app
-    packRequirements: false  # Changed to false, let serverless-python-requirements handle packaging
+    packRequirements: false
 
   pythonRequirements:
     dockerizePip: true
     noDeploy:
-      - annotated_types  # Use noDeploy instead of exclude for packages
+      - annotated_types
     slim: true  # Reduces package size
 
 package:
