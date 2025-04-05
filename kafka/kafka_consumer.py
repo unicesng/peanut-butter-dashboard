@@ -25,7 +25,7 @@ AGGREGATE_TOPIC = 'aggregate-consumption-v2'
 logger.info("Initializing Kafka consumers...")
 household_consumer = KafkaConsumer(
     HOUSEHOLD_TOPIC,
-    bootstrap_servers=['localhost:9092'],
+    bootstrap_servers=['172.31.87.248:9092'],
     auto_offset_reset='earliest',
     enable_auto_commit=True,
     group_id='smart-meter-household-group',
@@ -34,7 +34,7 @@ household_consumer = KafkaConsumer(
 
 aggregate_consumer = KafkaConsumer(
     AGGREGATE_TOPIC,
-    bootstrap_servers=['localhost:9092'],
+    bootstrap_servers=['172.31.87.248:9092'],
     auto_offset_reset='earliest',
     enable_auto_commit=True,
     group_id='smart-meter-aggregate-group',
