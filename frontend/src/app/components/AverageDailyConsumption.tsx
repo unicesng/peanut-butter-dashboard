@@ -42,23 +42,25 @@ export function AverageDailyConsumption() {
           {chartData.average} kWh
         </CardTitle>
         <div className="absolute right-4 top-4">
-          <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-            <TrendingUpIcon className="size-3" />
             {chartData.change > 0
-              ? `+${chartData.change}%`
-              : `${chartData.change}%`}
-          </Badge>
+              ? 
+              <Badge variant="outline" className="flex gap-1 rounded-lg text-xs bg-red-200">
+                +${chartData.change}% <TrendingUpIcon className="size-3" />
+              </Badge> :               
+              <Badge variant="outline" className="flex gap-1 rounded-lg text-xs bg-green-200">
+              +${chartData.change}% <TrendingUpIcon className="size-3" />
+            </Badge> }
         </div>
       </CardHeader>
       <CardFooter className="flex-col items-start gap-1 text-sm">
         {chartData.change > 0 ? (
-          <>
+          <p className="flex">
             `Increasing Trend` <TrendingUpIcon className="size-4" />
-          </>
+          </p>
         ) : (
-          <>
+          <p className="flex">
             `Decreasing Trend` <TrendingDownIcon className="size-4" />
-          </>
+          </p>
         )}
     </CardFooter>
     </Card >

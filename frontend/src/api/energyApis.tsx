@@ -21,3 +21,14 @@ export const GetEnergyAnomaly = async () => {
         throw error;
     }
 }
+
+export const GetEnergyConsumption = async () => {
+    try {
+        const url = `${process.env.NEXT_PUBLIC_ENERGY_API}/energy-consumption`;
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching energy consumption data:', error);
+        throw error;
+    }
+}

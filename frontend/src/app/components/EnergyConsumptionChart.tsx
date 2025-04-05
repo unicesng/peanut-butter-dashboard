@@ -12,19 +12,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { household: "A-1", total: 186, average: 80 },
-  { household: "A-2", total: 305, average: 200 },
-  { household: "A-3", total: 237, average: 120 },
-  { household: "A-4", total: 73, average: 190 },
-  { household: "A-5", total: 209, average: 130 },
-  { household: "A-6", total: 214, average: 140 },
-];
+import { GetEnergyConsumption } from "@/api/energyApis";
+import { useEffect, useState } from "react";
 
 const chartConfig = {
   total: {
@@ -37,19 +38,64 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+interface EnergyConsumptionChartData {
+  [category: string]: {
+    acorn: number;
+    total: number;
+    average: number;
+  }[];
+}
+
+
 export function EnergyConsumptionChart() {
+  const [chartData, setChartData] = useState<EnergyConsumptionChartData>({});
+  const [category, setCategory] = useState("Affluent")
+
+  useEffect(() => {
+    fetchData();
+  }, [])
+
+  const fetchData = async () => {
+    try {
+      const data = await GetEnergyConsumption();
+      setChartData(data);
+      setCategory("Affluent")
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Card className="w-1/3 m-2">
-      <CardHeader>
-        <CardTitle>Daily Energy Demand (kWh)</CardTitle>
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <CardTitle>Daily Energy Demand</CardTitle>
         <CardDescription>Based on ACORN Type</CardDescription>
+        <Select value={category} onValueChange={setCategory}>
+          <SelectTrigger
+            className="w-[160px] rounded-lg sm:ml-auto"
+            aria-label="Select a value"
+          >
+            <SelectValue placeholder="Affluent" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            <SelectItem value="Affluent" className="rounded-lg">
+            Affluent
+            </SelectItem>
+            <SelectItem value="Adversity" className="rounded-lg">
+              Adversity
+            </SelectItem>
+            <SelectItem value="Comfortable" className="rounded-lg">
+              Comfortable
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={chartData[category]}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="household"
+              dataKey="acorn"
               tickLine={false}
               tickMargin={10}
               axisLine={false}

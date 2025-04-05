@@ -82,3 +82,40 @@ async def energyAnomaly():
     conn.close()
 
     return data
+
+@energy_app.get("/energy-consumption")
+async def energyAnomaly():
+    conn = get_redshift_connection()
+    cursor = conn.cursor()
+    query = """
+        SELECT acorn, acorn_grouped, AVG(energy_mean) as avg_energy, AVG(energy_sum) as sum_energy
+        FROM final_merged_data
+        GROUP BY acorn, acorn_grouped
+    """
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    data = {}
+
+    for row in rows:
+        acorn = row[0]
+        acorn_grouped = row[1]
+        avg_energy = row[2]
+        sum_energy = row[3]
+
+        if acorn_grouped not in data:
+            data[acorn_grouped] = [{
+                "acorn": acorn,
+                "average": round(avg_energy,3),
+                "total": round(sum_energy,3)
+            }]
+        else:
+            data[acorn_grouped].append({
+                "acorn": acorn,
+                "average": round(avg_energy,3),
+                "total": round(sum_energy,3)
+            })
+
+    conn.close()
+
+    return data
