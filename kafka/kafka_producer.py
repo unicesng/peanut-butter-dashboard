@@ -100,14 +100,6 @@ SEASONAL_TEMPS = {
 }
 
 
-# Add this to the SmartMeterDataGenerator class
-def _generate_primary_key(self, household_id, timestamp):
-    """Generate a unique primary key for a reading"""
-    # Create a string combining household_id and timestamp
-    key_string = f"{household_id}_{timestamp}"
-    # Create a hash of this string for a more compact key
-    # Using MD5 for speed, but you could use SHA-256 for more security
-    return hashlib.md5(key_string.encode()).hexdigest()
 
 class SmartMeterDataGenerator:
     def __init__(self):
