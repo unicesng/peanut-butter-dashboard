@@ -18,7 +18,6 @@ export default function Energy() {
         <div className="flex m-2">
           <AverageDailyConsumption />
           <EnergyAnomalyCard />
-          <EnergyCostCard />
         </div>
         <div className="flex m-2">
           <EnergyConsumptionChart />

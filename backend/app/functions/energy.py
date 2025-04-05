@@ -61,7 +61,7 @@ async def energyAnomaly():
         FROM daily_dataset
         GROUP BY day
         ORDER BY day desc
-        LIMIT 10;
+        LIMIT 15;
     """
     cursor.execute(query)
     rows = cursor.fetchall()
@@ -84,37 +84,25 @@ async def energyAnomaly():
     return data
 
 @energy_app.get("/energy-consumption")
-async def energyAnomaly():
+async def energyConsumption():
     conn = get_redshift_connection()
     cursor = conn.cursor()
     query = """
-        SELECT acorn, acorn_grouped, AVG(energy_mean) as avg_energy, AVG(energy_sum) as sum_energy
+        SELECT acorn_grouped, AVG(energy_mean) as avg_energy, avg(energy_sum)
         FROM final_merged_data
-        GROUP BY acorn, acorn_grouped
+        GROUP BY acorn_grouped
     """
     cursor.execute(query)
     rows = cursor.fetchall()
 
-    data = {}
+    data = []
 
     for row in rows:
-        acorn = row[0]
-        acorn_grouped = row[1]
-        avg_energy = row[2]
-        sum_energy = row[3]
-
-        if acorn_grouped not in data:
-            data[acorn_grouped] = [{
-                "acorn": acorn,
-                "average": round(avg_energy,3),
-                "total": round(sum_energy,3)
-            }]
-        else:
-            data[acorn_grouped].append({
-                "acorn": acorn,
-                "average": round(avg_energy,3),
-                "total": round(sum_energy,3)
-            })
+        data.append({
+            "acorn_grouped": row[0],
+            "avg_energy": round(row[1],3),
+            "sum_energy": round(row[2],3)
+        })
 
     conn.close()
 

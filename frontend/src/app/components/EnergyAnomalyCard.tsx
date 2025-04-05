@@ -32,7 +32,7 @@ export const EnergyAnomalyCard = () => {
   };
 
   return (
-    <Card className="w-1/3 m-2">
+    <Card className="w-1/2 m-2">
       <CardHeader className="relative">
         <CardDescription>Energy Grid Patterns</CardDescription>
         <TooltipProvider>
