@@ -3,11 +3,11 @@ import json
 import time
 import random
 from datetime import datetime, timedelta
-import pandas as pd
-import numpy as np
 from collections import deque
 import argparse
-import sys
+import hashlib
+# Add this to your imports
+from collections import deque
 
 # Kafka configuration will be set in the main function
 
@@ -99,6 +99,16 @@ SEASONAL_TEMPS = {
     12: (2, 9)    # December
 }
 
+
+# Add this to the SmartMeterDataGenerator class
+def _generate_primary_key(self, household_id, timestamp):
+    """Generate a unique primary key for a reading"""
+    # Create a string combining household_id and timestamp
+    key_string = f"{household_id}_{timestamp}"
+    # Create a hash of this string for a more compact key
+    # Using MD5 for speed, but you could use SHA-256 for more security
+    return hashlib.md5(key_string.encode()).hexdigest()
+
 class SmartMeterDataGenerator:
     def __init__(self):
         # Generate household metadata
@@ -117,6 +127,17 @@ class SmartMeterDataGenerator:
         
         # Initialize with some historical data
         self._initialize_historical_data()
+    # Modify the _generate_data_for_time method to add primary keys
+        # Add this to the SmartMeterDataGenerator class
+    def _generate_primary_key(self, household_id, timestamp):
+        """Generate a unique primary key for a reading"""
+        # Create a string combining household_id and timestamp
+        key_string = f"{household_id}_{timestamp}"
+        # Create a hash of this string for a more compact key
+        # Using MD5 for speed, but you could use SHA-256 for more security
+        return hashlib.md5(key_string.encode()).hexdigest()
+
+
     
     def _generate_households(self):
         """Generate mock household data similar to the London dataset"""
@@ -389,6 +410,9 @@ class SmartMeterDataGenerator:
             "Solar Production": 0
         }
         
+        # Format timestamp once for all readings in this batch
+        timestamp_iso = self.current_datetime.isoformat()
+        
         for household in self.households:
             # Calculate consumption
             consumption_data = self._calculate_household_consumption(household)
@@ -402,9 +426,13 @@ class SmartMeterDataGenerator:
             for appliance, value in consumption_data["appliance_breakdown"].items():
                 appliance_totals[appliance] = appliance_totals.get(appliance, 0) + value
             
-            # Create reading record
+            # Generate primary key
+            primary_key = self._generate_primary_key(household["household_id"], timestamp_iso)
+            
+            # Create reading record with primary key
             reading = {
-                "datetime": self.current_datetime.isoformat(),
+                "id": primary_key,  # Add primary key as id
+                "datetime": timestamp_iso,
                 "household_id": household["household_id"],
                 "acorn_group": household["acorn_group"],
                 "acorn_category": household["acorn_category"],
@@ -419,15 +447,19 @@ class SmartMeterDataGenerator:
             
             readings.append(reading)
         
+        # Also add a unique ID to the aggregate record
+        aggregate_primary_key = self._generate_primary_key("aggregate", timestamp_iso)
+        
         # Clean up appliance totals to remove zero values
         appliance_totals = {k: round(v, 3) for k, v in appliance_totals.items() if v != 0}
         
         # Get ACORN group statistics
         acorn_stats = self._calculate_acorn_stats(readings)
         
-        # Create aggregate record
+        # Create aggregate record with primary key
         aggregate_data = {
-            "datetime": self.current_datetime.isoformat(),
+            "id": aggregate_primary_key,  # Add primary key as id
+            "datetime": timestamp_iso,
             "num_households": len(readings),
             "total_consumption_kwh": round(total_consumption, 2),
             "average_consumption_kwh": round(total_consumption / len(readings), 3) if readings else 0,
@@ -622,20 +654,52 @@ class SmartMeterDataGenerator:
         return data_batch
 
 
-def send_to_kafka(producer, data_batch, topics):
-    """Send generated data to Kafka topics"""
+# Modify the send_to_kafka function to use the duplicate tracker
+def send_to_kafka(producer, data_batch, topics, duplicate_tracker=None):
+    """Send generated data to Kafka topics with duplicate prevention"""
     try:
-        # Send individual household readings
+        # Track how many duplicates we found
+        duplicate_count = 0
+        sent_count = 0
+        
+        # Send individual household readings (with duplicate checking)
         for reading in data_batch["household_readings"]:
+            # Skip if this is a duplicate and we're tracking duplicates
+            if duplicate_tracker and duplicate_tracker.is_duplicate(reading["id"]):
+                duplicate_count += 1
+                continue
+                
+            # Send to Kafka
             producer.send(topics["household"], value=reading)
+            sent_count += 1
             
-        # Send aggregate data
-        producer.send(topics["aggregate"], value=data_batch["aggregate_data"])
+            # Track this key if we're using duplicate tracking
+            if duplicate_tracker:
+                duplicate_tracker.add_key(reading["id"])
+            
+        # Check if aggregate data is a duplicate
+        agg_data = data_batch["aggregate_data"]
+        agg_is_duplicate = duplicate_tracker and duplicate_tracker.is_duplicate(agg_data["id"])
+        
+        # Send aggregate data if not a duplicate
+        if not agg_is_duplicate:
+            producer.send(topics["aggregate"], value=agg_data)
+            
+            # Track this key if we're using duplicate tracking
+            if duplicate_tracker:
+                duplicate_tracker.add_key(agg_data["id"])
+        else:
+            duplicate_count += 1
         
         # Flush producer
         producer.flush()
         
-        print(f"✅ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Sent {len(data_batch['household_readings'])} household readings")
+        # Log results
+        print(f"✅ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Sent {sent_count} household readings")
+        
+        if duplicate_count > 0:
+            print(f"   Found and skipped {duplicate_count} duplicate readings")
+            
         print(f"   Average consumption: {data_batch['aggregate_data']['average_consumption_kwh']} kWh/household")
         print(f"   Anomalies detected: {data_batch['aggregate_data']['anomaly_count']} ({data_batch['aggregate_data']['anomaly_percentage']}%)")
         
@@ -656,8 +720,31 @@ def send_to_kafka(producer, data_batch, topics):
     except Exception as e:
         print(f"❌ Error sending data to Kafka: {e}")
         return False
-
-
+# This class can be added to your script
+class DuplicateTracker:
+    """Class to track and prevent duplicate data submission to Kafka"""
+    
+    def __init__(self, max_size=10000):
+        """Initialize with a maximum cache size to prevent memory issues"""
+        self.seen_keys = set()
+        self.key_queue = deque(maxlen=max_size)
+        self.max_size = max_size
+    
+    def is_duplicate(self, key):
+        """Check if a key has been seen before"""
+        return key in self.seen_keys
+    
+    def add_key(self, key):
+        """Add a key to the tracker"""
+        if len(self.seen_keys) >= self.max_size:
+            # Remove oldest key if at capacity
+            oldest_key = self.key_queue.popleft()
+            self.seen_keys.remove(oldest_key)
+        
+        # Add new key
+        self.seen_keys.add(key)
+        self.key_queue.append(key)
+# Update run_data_generator function to use the duplicate tracker
 def run_data_generator(kafka_servers, interval_seconds=30, num_households=None):
     """Run the data generator continuously"""
     global NUM_HOUSEHOLDS
@@ -685,15 +772,19 @@ def run_data_generator(kafka_servers, interval_seconds=30, num_households=None):
     # Initialize generator
     generator = SmartMeterDataGenerator()
     
+    # Initialize duplicate tracker
+    duplicate_tracker = DuplicateTracker(max_size=100000)  # Adjust size based on your needs
+    
     print(f"🚀 Starting enhanced smart meter data generator for {NUM_HOUSEHOLDS} households")
     print(f"📊 Data will be sent to Kafka topics '{HOUSEHOLD_TOPIC}' and '{AGGREGATE_TOPIC}' every {interval_seconds} seconds")
     print(f"💡 New features enabled: time series data, historical comparison, appliance breakdown, peak detection")
+    print(f"🔒 Duplicate prevention enabled with primary keys")
     print("------------------------------------------------------------------")
     
     try:
         while True:
             data_batch = generator.generate_batch()
-            send_to_kafka(producer, data_batch, topics)
+            send_to_kafka(producer, data_batch, topics, duplicate_tracker)
             time.sleep(interval_seconds)
     except KeyboardInterrupt:
         print("⏹️ Generator stopped by user")

@@ -1,15 +1,12 @@
 import sys
-from awsglue.transforms import *
-from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
-from awsglue.dynamicframe import DynamicFrame
-from pyspark.sql import functions as F
-from pyspark.sql.types import *
-from pyspark.sql.window import Window
+from awsglue.utils import getResolvedOptions
+from pyspark.sql.functions import to_timestamp
+import boto3
+from datetime import datetime
 
-# Initialize Glue context
 args = getResolvedOptions(sys.argv, ['JOB_NAME'])
 sc = SparkContext()
 glueContext = GlueContext(sc)
@@ -17,168 +14,107 @@ spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args['JOB_NAME'], args)
 
-# Read data from S3
-s3_bucket = "peanut-butter-project"
-s3_aggregate_path = f"s3://{s3_bucket}/smart-meter-data/aggregate/"
-s3_household_path = f"s3://{s3_bucket}/smart-meter-data/household/"
-s3_anomaly_path = f"s3://{s3_bucket}/smart-meter-data/anomalies/"
+# --- Define source paths ---
+bucket = "peanut-butter-project"
+base_path = f"s3://{bucket}/smart-meter-data"
 
-# Read aggregate data
-aggregate_dyf = glueContext.create_dynamic_frame.from_options(
-    connection_type="s3",
-    connection_options={"paths": [s3_aggregate_path], "recurse": True},
-    format="json"
-)
+# --- Use more specific path pattern for date-based directories ---
+# This will match any date folder in the format YYYY-MM-DD
+household_path = f"{base_path}/household/*/*.json"
+anomaly_path = f"{base_path}/anomalies/*/*.json"
+aggregate_path = f"{base_path}/aggregate/*/*.json"
 
-# Read household data
-household_dyf = glueContext.create_dynamic_frame.from_options(
-    connection_type="s3",
-    connection_options={"paths": [s3_household_path], "recurse": True},
-    format="json"
-)
+# --- Debug: Print the paths we're trying to access ---
+print(f"Attempting to read from household path: {household_path}")
+print(f"Attempting to read from anomaly path: {anomaly_path}")
+print(f"Attempting to read from aggregate path: {aggregate_path}")
 
-# Read anomaly data
-anomaly_dyf = glueContext.create_dynamic_frame.from_options(
-    connection_type="s3",
-    connection_options={"paths": [s3_anomaly_path], "recurse": True},
-    format="json"
-)
+# --- Load data from S3 with error handling ---
+try:
+    household_df = spark.read.json(household_path)
+    print(f"Successfully loaded household data: {household_df.count()} records")
+except Exception as e:
+    print(f"Error loading household data: {str(e)}")
+    household_df = spark.createDataFrame([], "datetime timestamp, household_id string, consumption_kwh double")
+    print("Created empty household dataframe")
 
-# Convert to Spark DataFrames
-aggregate_df = aggregate_dyf.toDF()
-household_df = household_dyf.toDF()
-anomaly_df = anomaly_dyf.toDF()
+try:
+    anomaly_df = spark.read.json(anomaly_path)
+    print(f"Successfully loaded anomaly data: {anomaly_df.count()} records")
+except Exception as e:
+    print(f"Error loading anomaly data: {str(e)}")
+    anomaly_df = spark.createDataFrame([], "datetime timestamp, household_id string, anomaly_type string, severity double")
+    print("Created empty anomaly dataframe")
 
-# Transform aggregate data
-def transform_aggregate_data(df):
-    # First handle the time series data
-    if "time_series" in df.columns:
-        # Explode time_series array into separate rows
-        time_series_df = df.select(
-            F.col("datetime").alias("aggregate_datetime"),
-            F.explode("time_series").alias("ts_entry")
-        )
-        
-        # Extract fields from the exploded structure
-        time_series_df = time_series_df.select(
-            "aggregate_datetime",
-            F.col("ts_entry.datetime").alias("ts_datetime"),
-            F.col("ts_entry.total_consumption_kwh").alias("ts_total_consumption"),
-            F.col("ts_entry.average_consumption_kwh").alias("ts_average_consumption"),
-            F.col("ts_entry.temperature").alias("ts_temperature"),
-            F.col("ts_entry.weather_condition").alias("ts_weather_condition")
-        )
-        
-        # Format time for dashboard
-        time_series_df = time_series_df.withColumn(
-            "time",
-            F.date_format(F.to_timestamp("ts_datetime"), "HH:mm")
-        )
-        
-        # Create the hourly_data array expected by dashboard
-        hourly_data = time_series_df.select(
-            "aggregate_datetime",
-            F.struct(
-                "time",
-                F.col("ts_total_consumption").alias("consumption"),
-                F.col("ts_average_consumption").alias("average"),
-                F.lit(False).alias("anomaly") # Default to false, could be calculated
-            ).alias("hourly_point")
-        ).groupBy("aggregate_datetime").agg(
-            F.collect_list("hourly_point").alias("hourly_data")
-        )
-        
-        # Join back to main dataframe
-        df = df.join(hourly_data, df.datetime == hourly_data.aggregate_datetime, "left")
-        df = df.drop("aggregate_datetime")
+try:
+    aggregate_df = spark.read.json(aggregate_path)
+    print(f"Successfully loaded aggregate data: {aggregate_df.count()} records")
+except Exception as e:
+    print(f"Error loading aggregate data: {str(e)}")
+    aggregate_df = spark.createDataFrame([], "datetime timestamp, num_households int, total_consumption_kwh double, average_consumption_kwh double, anomaly_count int, anomaly_percentage double, weather struct<temperature:double,condition:string,humidity:double,wind_speed:double>")
+    print("Created empty aggregate dataframe")
+
+# --- Process data only if we have records ---
+if household_df.count() > 0:
+    household_df = household_df.withColumn("datetime", to_timestamp("datetime"))
     
-    # Transform peak demand
-    if "peak_demand" in df.columns:
-        # Extract peak demand time string
-        df = df.withColumn(
-            "peak_demand_time", 
-            F.when(
-                F.col("peak_demand.current_day.peak_time").isNotNull(),
-                F.concat(
-                    F.round(F.col("peak_demand.current_day.peak_demand_kwh"), 1).cast("string"),
-                    F.lit(" kWh at "),
-                    F.col("peak_demand.current_day.peak_time")
-                )
-            ).otherwise(F.lit("No data"))
-        )
-        
-        # Extract peak change string
-        df = df.withColumn(
-            "peak_change",
-            F.when(
-                F.col("peak_demand.vs_previous_day.percentage").isNotNull(),
-                F.concat(
-                    F.when(F.col("peak_demand.vs_previous_day.percentage") >= 0, F.lit("+")).otherwise(F.lit("")),
-                    F.round(F.col("peak_demand.vs_previous_day.percentage"), 1).cast("string"),
-                    F.lit("% vs yesterday")
-                )
-            ).otherwise(F.lit("No data"))
-        )
+if anomaly_df.count() > 0:
+    anomaly_df = anomaly_df.withColumn("datetime", to_timestamp("datetime"))
     
-    # Transform historical comparison to previous_data
-    if "historical_comparison" in df.columns:
-        df = df.withColumn(
-            "previous_data",
-            F.when(
-                F.col("historical_comparison.vs_yesterday_avg.value").isNotNull(),
-                F.struct(
-                    F.col("num_households").alias("num_households"),
-                    F.col("anomaly_count").alias("anomaly_count"),
-                    (F.col("average_consumption_kwh") - F.col("historical_comparison.vs_yesterday_avg.value"))
-                      .alias("average_consumption_kwh")
-                )
-            ).otherwise(F.lit(None))
-        )
+if aggregate_df.count() > 0:
+    aggregate_df = aggregate_df.withColumn("datetime", to_timestamp("datetime"))
     
-    # Calculate appliance breakdown percentages
-    if "appliance_breakdown" in df.columns:
-        appliance_cols = df.select("appliance_breakdown.*").columns
-        
-        # First, get the absolute total of all values
-        total_expr = "+".join([f"abs(appliance_breakdown.`{col}`)" for col in appliance_cols])
-        df = df.withColumn("total_appliance_consumption", F.expr(total_expr))
-        
-        # Calculate percentage for each category
-        for col in appliance_cols:
-            df = df.withColumn(
-                f"appliance_pct_{col}", 
-                (F.abs(F.col(f"appliance_breakdown.{col}")) / F.col("total_appliance_consumption")) * 100
-            )
-        
-        # Create a new struct with the percentages
-        percentage_cols = [F.col(f"appliance_pct_{col}").alias(col) for col in appliance_cols]
-        df = df.withColumn("appliance_breakdown_percentages", F.struct(*percentage_cols))
-        
-        # Drop the temporary columns
-        df = df.drop("total_appliance_consumption", *[f"appliance_pct_{col}" for col in appliance_cols])
-    
-    return df
+    # --- Flatten aggregate (weather) ---
+    aggregate_df_flat = aggregate_df.selectExpr(
+        "datetime", 
+        "num_households", 
+        "total_consumption_kwh", 
+        "average_consumption_kwh", 
+        "anomaly_count", 
+        "anomaly_percentage",
+        "weather.temperature as weather_temp",
+        "weather.condition as weather_condition",
+        "weather.humidity as weather_humidity",
+        "weather.wind_speed as weather_wind_speed"
+    )
+else:
+    # Create empty flattened dataframe if no records
+    aggregate_df_flat = spark.createDataFrame([], "datetime timestamp, num_households int, total_consumption_kwh double, average_consumption_kwh double, anomaly_count int, anomaly_percentage double, weather_temp double, weather_condition string, weather_humidity double, weather_wind_speed double")
 
-# Apply transformations
-transformed_aggregate_df = transform_aggregate_data(aggregate_df)
+# --- JDBC write config ---
+jdbc_url = "jdbc:postgresql://your-actual-rds-endpoint:5432/your-database"
+jdbc_properties = {
+    "user": "your-username",
+    "password": "your-password",
+    "driver": "org.postgresql.Driver"
+}
 
-# Transform household data (simpler transformation)
-def transform_household_data(df):
-    # No major transformations needed for household data
-    return df
+# --- Write to RDS only if we have data ---
+if household_df.count() > 0:
+    household_df.write.jdbc(
+        url=jdbc_url,
+        table="household_readings",
+        mode="append",
+        properties=jdbc_properties
+    )
+    print("Successfully wrote household data to RDS")
 
-transformed_household_df = transform_household_data(household_df)
+if anomaly_df.count() > 0:
+    anomaly_df.write.jdbc(
+        url=jdbc_url,
+        table="anomaly_readings",
+        mode="append",
+        properties=jdbc_properties
+    )
+    print("Successfully wrote anomaly data to RDS")
 
-# Prepare data for RDS
-# 1. Write to temporary location on S3
-temp_bucket = "peanut-butter-project-temp"
-aggregate_output = f"s3://{temp_bucket}/transformed/aggregate/"
-household_output = f"s3://{temp_bucket}/transformed/household/"
-anomaly_output = f"s3://{temp_bucket}/transformed/anomaly/"
-
-# Write transformed data as Parquet
-transformed_aggregate_df.write.mode("overwrite").parquet(aggregate_output)
-transformed_household_df.write.mode("overwrite").parquet(household_output)
-anomaly_df.write.mode("overwrite").parquet(anomaly_output)
+if aggregate_df_flat.count() > 0:
+    aggregate_df_flat.write.jdbc(
+        url=jdbc_url,
+        table="aggregate_readings",
+        mode="append",
+        properties=jdbc_properties
+    )
+    print("Successfully wrote aggregate data to RDS")
 
 job.commit()

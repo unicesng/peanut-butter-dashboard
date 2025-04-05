@@ -53,12 +53,13 @@ s3_client = boto3.client(
 )
 logger.info("S3 client initialized for region us-east-1")
 
-# S3 bucket details
+# S3 bucket details - SAME BUCKET but NEW DIRECTORY PREFIX
 BUCKET_NAME = 'peanut-butter-project'
-HOUSEHOLD_PREFIX = 'smart-meter-data/household/'
-AGGREGATE_PREFIX = 'smart-meter-data/aggregate/'
-ANOMALY_PREFIX = 'smart-meter-data/anomalies/'
-logger.info(f"Will store data in bucket: {BUCKET_NAME}")
+# Updated directory prefixes to differentiate new data with primary keys
+HOUSEHOLD_PREFIX = 'smart-meter-data-v2/household/'
+AGGREGATE_PREFIX = 'smart-meter-data-v2/aggregate/'
+ANOMALY_PREFIX = 'smart-meter-data-v2/anomalies/'
+logger.info(f"Will store data in bucket: {BUCKET_NAME} under new prefixes")
 
 def upload_to_s3(data, prefix, timestamp, data_type):
     """Upload data to S3 bucket with appropriate prefix and timestamp-based filenames"""
@@ -70,18 +71,21 @@ def upload_to_s3(data, prefix, timestamp, data_type):
         date_part = dt.strftime('%Y-%m-%d')
         time_part = dt.strftime('%H%M%S')
         
-        # Generate a filename with timestamp to ensure uniqueness
+        # Extract the primary key (id) if available, otherwise generate one
+        record_id = data.get('id', str(uuid.uuid4()))
+        
+        # Generate a filename with primary key to ensure uniqueness
         if data_type == 'household':
             # For household data, include ACORN group and household ID in path
             acorn_group = data.get('acorn_group', 'unknown').replace(' ', '_').lower()
             household_id = data.get('household_id', 'unknown')
             
-            # Create a flat structure with timestamp in filename
-            file_key = f"{prefix}{acorn_group}/{date_part}/household_{household_id}_{time_part}.json"
+            # Use the primary key in the filename instead of just timestamp
+            file_key = f"{prefix}{acorn_group}/{date_part}/household_{household_id}_{record_id}.json"
             
             # If it's an anomaly, also save to anomaly folder
             if data.get('is_anomaly', False):
-                anomaly_key = f"{ANOMALY_PREFIX}{date_part}/anomaly_{household_id}_{time_part}.json"
+                anomaly_key = f"{ANOMALY_PREFIX}{date_part}/anomaly_{household_id}_{record_id}.json"
                 logger.info(f"Detected anomaly, also saving to: {anomaly_key}")
                 s3_client.put_object(
                     Bucket=BUCKET_NAME,
@@ -91,8 +95,8 @@ def upload_to_s3(data, prefix, timestamp, data_type):
                 )
                 
         elif data_type == 'aggregate':
-            # For aggregate data, use a flat structure with timestamp in filename
-            file_key = f"{prefix}{date_part}/aggregate_{time_part}.json"
+            # For aggregate data, use a flat structure with primary key in filename
+            file_key = f"{prefix}{date_part}/aggregate_{record_id}.json"
         
         logger.info(f"Uploading {data_type} data to S3 path: {file_key}")
         
@@ -140,6 +144,10 @@ def process_household_message(message):
     consumption = data.get('consumption_kwh', 0)
     is_anomaly = data.get('is_anomaly', False)
     
+    # Log primary key if available
+    if 'id' in data:
+        logger.info(f"Primary Key: {data['id']}")
+    
     logger.info(f"Household: {household_id}, ACORN: {acorn_group}")
     logger.info(f"Timestamp: {timestamp}, Consumption: {consumption} kWh, Anomaly: {is_anomaly}")
     
@@ -169,6 +177,10 @@ def process_aggregate_message(message):
     total_consumption = data.get('total_consumption_kwh', 0)
     avg_consumption = data.get('average_consumption_kwh', 0)
     anomaly_count = data.get('anomaly_count', 0)
+    
+    # Log primary key if available
+    if 'id' in data:
+        logger.info(f"Primary Key: {data['id']}")
     
     logger.info(f"Timestamp: {timestamp}")
     logger.info(f"Households: {num_households}, Total: {total_consumption} kWh, Avg: {avg_consumption} kWh")
@@ -242,5 +254,6 @@ def run_aggregate_consumer():
 if __name__ == "__main__":
     logger.info("🚀 Starting Smart Meter Data Kafka consumers...")
     logger.info("Consumers will store data in S3 for monitoring and ML analysis")
+    logger.info(f"Using new directory structure: {HOUSEHOLD_PREFIX} for data with primary keys")
     
     run_consumers()
