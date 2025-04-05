@@ -107,3 +107,30 @@ async def energyConsumption():
     conn.close()
 
     return data
+
+@energy_app.get("/energy-distribution")
+async def energyDistribution():
+    conn = get_redshift_connection()
+    cursor = conn.cursor()
+    query = """
+        SELECT 
+            SUM(CASE WHEN energy_sum < 4.8 THEN 1 ELSE 0 END) as low,
+            SUM(CASE WHEN energy_sum >= 4.8 AND energy_sum <= 13.1 THEN 1 ELSE 0 END) as medium,
+            SUM(CASE WHEN energy_sum > 13.1 THEN 1 ELSE 0 END) as high
+        FROM final_merged_data
+    """
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    low = rows[0][0]
+    medium = rows[0][1]
+    high = rows[0][2]
+
+    return [
+        {"category": "low", "count": low, "fill": "var(--color-low)" },
+        {"category": "medium", "count": medium, "fill": "var(--color-medium)"},
+        {"category": "high", "count": high, "fill": "var(--color-high)"},
+    ]
+

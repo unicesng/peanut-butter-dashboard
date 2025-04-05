@@ -100,18 +100,17 @@ export function EnergyConsumptionChart() {
               content={<ChartTooltipContent indicator="dashed" />}
             />
             {category === "Total" ?
-              <Bar dataKey="avg_energy" fill="var(--color-total)" radius={4} /> :
-              <Bar dataKey="sum_energy" fill="var(--color-average)" radius={4} />
+              <Bar dataKey="sum_energy" fill="var(--color-total)" radius={4} /> :
+              <Bar dataKey="avg_energy" fill="var(--color-average)" radius={4} />
             }
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this household <TrendingUp className="h-4 w-4" />
-        </div>
         <div className="leading-none text-muted-foreground">
-          Showing total energy consumption by households for the last 6 households
+          Adversity (ACORN - P,Q,L,N,K,M,O), <br/>
+          Affluent (ACORN - A,B,C,D,E), <br/>
+          Comfortable (ACORN - H,J,F,G,I)         
         </div>
       </CardFooter>
     </Card>

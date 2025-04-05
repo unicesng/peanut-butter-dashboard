@@ -32,3 +32,14 @@ export const GetEnergyConsumption = async () => {
         throw error;
     }
 }
+
+export const GetEnergyDistribution = async () => {
+    try {
+        const url = `${process.env.NEXT_PUBLIC_ENERGY_API}/energy-distribution`;
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching energy distribution data:', error);
+        throw error;
+    }
+}
