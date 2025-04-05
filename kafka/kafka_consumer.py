@@ -18,8 +18,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Kafka topic names
-HOUSEHOLD_TOPIC = 'smart-meter-readings'
-AGGREGATE_TOPIC = 'aggregate-consumption'
+HOUSEHOLD_TOPIC = 'smart-meter-readings-v2'
+AGGREGATE_TOPIC = 'aggregate-consumption-v2'
 
 # Configure Kafka consumer
 logger.info("Initializing Kafka consumers...")

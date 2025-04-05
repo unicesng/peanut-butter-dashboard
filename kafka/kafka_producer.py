@@ -12,8 +12,8 @@ from collections import deque
 # Kafka configuration will be set in the main function
 
 # Kafka topics
-HOUSEHOLD_TOPIC = 'smart-meter-readings'
-AGGREGATE_TOPIC = 'aggregate-consumption'
+HOUSEHOLD_TOPIC = 'smart-meter-readings-v2'
+AGGREGATE_TOPIC = 'aggregate-consumption-v2'
 
 # Mock data configuration - based on London dataset structure
 NUM_HOUSEHOLDS = 100  # Number of households to simulate
@@ -363,13 +363,17 @@ class SmartMeterDataGenerator:
         ev_consumption = 0
         if household["has_ev"] and ev_factor > 1.0:
             ev_consumption = total_consumption * (1 - 1/ev_factor)
-            # Reduce other components proportionally
-            reduction_factor = 1 - (ev_consumption / total_consumption)
-            lighting_pct *= reduction_factor
-            heating_pct *= reduction_factor
-            kitchen_pct *= reduction_factor
-            entertainment_pct *= reduction_factor
-            other_pct *= reduction_factor
+            # Add this check to prevent division by zero
+            if total_consumption > 0:  # Ensure we don't divide by zero
+                reduction_factor = 1 - (ev_consumption / total_consumption)
+                lighting_pct *= reduction_factor
+                heating_pct *= reduction_factor
+                kitchen_pct *= reduction_factor
+                entertainment_pct *= reduction_factor
+                other_pct *= reduction_factor
+            else:
+                # Handle the zero consumption case
+                ev_consumption = 0
         
         # Calculate actual values
         result = {
