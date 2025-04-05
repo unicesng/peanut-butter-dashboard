@@ -4,3 +4,4 @@ uvicorn
 virtualenv
 dotenv 
 python-dotenv
+starlette
