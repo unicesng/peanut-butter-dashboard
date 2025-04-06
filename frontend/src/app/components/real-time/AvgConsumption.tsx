@@ -38,18 +38,25 @@ export default function AvgConsumption () {
     }, []);
 
     return (
-        <div>
-            <div className="bg-white p-4 rounded shadow">
-                <div className="text-sm text-gray-500">Avg. Consumption</div>
-                <div className="text-2xl font-bold">{avg} kWh</div>
-                <div className={`text-sm ${
-                    change > 0 ? 'text-red-500' : 
-                    change < 0 ? 'text-green-500' : 'text-gray-500'
-                }`}>
-                    {change > 0 ? '+' : ''}
-                    {change?.toFixed(1)}%
+        <>
+            {loading ? (
+                <div className="bg-white p-4 rounded shadow flex flex-col justify-center items-center space-y-2">
+                    <div className="animate-spin h-6 w-6 border-2 border-blue-500 border-t-transparent rounded-full" />
+                    <p className="text-sm text-gray-500">Loading alerts...</p>
                 </div>
-            </div>
-        </div>
+            ) : (
+                <div className="bg-white p-4 rounded shadow">
+                    <div className="text-sm text-gray-500">Avg. Consumption</div>
+                    <div className="text-2xl font-bold">{avg} kWh</div>
+                    <div className={`text-sm ${
+                        change > 0 ? 'text-red-500' : 
+                        change < 0 ? 'text-green-500' : 'text-gray-500'
+                    }`}>
+                        {change > 0 ? '+' : ''}
+                        {change?.toFixed(1)}%
+                    </div>
+                </div>
+           )}
+        </>
     )
 }
