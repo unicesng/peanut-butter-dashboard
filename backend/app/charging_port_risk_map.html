@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_89209072d69a108a6cf8a8f81aba1a38 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_89209072d69a108a6cf8a8f81aba1a38" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_89209072d69a108a6cf8a8f81aba1a38 = L.map(
+                "map_89209072d69a108a6cf8a8f81aba1a38",
+                {
+                    center: [51.50439113330264, -0.10738461731085686],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_920ce2d4574f3432741ad0e37e4d9e31 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_920ce2d4574f3432741ad0e37e4d9e31.addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var marker_e68f157bd87cceee770806f0313654a1 = L.marker(
+                [51.5277693569899, -0.260064454729999],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_e71ea14f8362543569eb3da9e81be2b3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a0a45a12ec4b981a0e5b81fa31c4f519 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f03def6ae6d6ceba1521ec89461fe7a3 = $(`<div id="html_f03def6ae6d6ceba1521ec89461fe7a3" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Financially Stretched<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_a0a45a12ec4b981a0e5b81fa31c4f519.setContent(html_f03def6ae6d6ceba1521ec89461fe7a3);
+            
+        
+
+        marker_e68f157bd87cceee770806f0313654a1.bindPopup(popup_a0a45a12ec4b981a0e5b81fa31c4f519)
+        ;
+
+        
+    
+    
+                marker_e68f157bd87cceee770806f0313654a1.setIcon(icon_e71ea14f8362543569eb3da9e81be2b3);
+            
+    
+            var marker_9637cb1ed35e29dbe64d387cd41ca612 = L.marker(
+                [51.3951557327848, 0.0479070091362763],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_c338c131bb4eef6b6fdc5f1d17434d9c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_eb08aebdca4999f7bc04031706f53fa2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f946c5a891a47bf950f5a65b11c3b05f = $(`<div id="html_f946c5a891a47bf950f5a65b11c3b05f" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_eb08aebdca4999f7bc04031706f53fa2.setContent(html_f946c5a891a47bf950f5a65b11c3b05f);
+            
+        
+
+        marker_9637cb1ed35e29dbe64d387cd41ca612.bindPopup(popup_eb08aebdca4999f7bc04031706f53fa2)
+        ;
+
+        
+    
+    
+                marker_9637cb1ed35e29dbe64d387cd41ca612.setIcon(icon_c338c131bb4eef6b6fdc5f1d17434d9c);
+            
+    
+            var marker_6a405f332cd640d432e1f50a82b689f2 = L.marker(
+                [51.4815078982008, -0.461510478361123],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_8573ed54fd7c63bad21f31cc8d469a91 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e31ca6faafb76bb57d693fd16e68e3db = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_578c7e54d4e3b14d02753ad2b2d2b195 = $(`<div id="html_578c7e54d4e3b14d02753ad2b2d2b195" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Affluent Achievers<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_e31ca6faafb76bb57d693fd16e68e3db.setContent(html_578c7e54d4e3b14d02753ad2b2d2b195);
+            
+        
+
+        marker_6a405f332cd640d432e1f50a82b689f2.bindPopup(popup_e31ca6faafb76bb57d693fd16e68e3db)
+        ;
+
+        
+    
+    
+                marker_6a405f332cd640d432e1f50a82b689f2.setIcon(icon_8573ed54fd7c63bad21f31cc8d469a91);
+            
+    
+            var marker_9b71f08d46054323c9999ba22bae39f1 = L.marker(
+                [51.5265733862706, 0.141446687672054],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_3ec26a3ce96548f03cf77bfab40824c4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e2dcd61c9ba8e45d06d305a7d658cc07 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_22064f3245388a3a09bda72996a189f2 = $(`<div id="html_22064f3245388a3a09bda72996a189f2" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_e2dcd61c9ba8e45d06d305a7d658cc07.setContent(html_22064f3245388a3a09bda72996a189f2);
+            
+        
+
+        marker_9b71f08d46054323c9999ba22bae39f1.bindPopup(popup_e2dcd61c9ba8e45d06d305a7d658cc07)
+        ;
+
+        
+    
+    
+                marker_9b71f08d46054323c9999ba22bae39f1.setIcon(icon_3ec26a3ce96548f03cf77bfab40824c4);
+            
+    
+            var marker_fa205a53dabde0ed0f2c89692ae82295 = L.marker(
+                [51.3913325595845, -0.294467278313772],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_f5b0f8d3a524a3b31e18d1e5fb3852c4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ca0bc826db571b81cea7dd6e456677fc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a14e7c1ccb1dd9c8a4c0874b556cbbe9 = $(`<div id="html_a14e7c1ccb1dd9c8a4c0874b556cbbe9" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Financially Stretched<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_ca0bc826db571b81cea7dd6e456677fc.setContent(html_a14e7c1ccb1dd9c8a4c0874b556cbbe9);
+            
+        
+
+        marker_fa205a53dabde0ed0f2c89692ae82295.bindPopup(popup_ca0bc826db571b81cea7dd6e456677fc)
+        ;
+
+        
+    
+    
+                marker_fa205a53dabde0ed0f2c89692ae82295.setIcon(icon_f5b0f8d3a524a3b31e18d1e5fb3852c4);
+            
+    
+            var marker_5029099c0aac5f36f897234513544eff = L.marker(
+                [51.656593193062, -0.122964726808981],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_64c311dfdfba33b7c5b38b22f61e4a12 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9043fa3ba4511caa7232dacf79b5c019 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_25bfd13a4815ed9b4279038f9af17e29 = $(`<div id="html_25bfd13a4815ed9b4279038f9af17e29" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_9043fa3ba4511caa7232dacf79b5c019.setContent(html_25bfd13a4815ed9b4279038f9af17e29);
+            
+        
+
+        marker_5029099c0aac5f36f897234513544eff.bindPopup(popup_9043fa3ba4511caa7232dacf79b5c019)
+        ;
+
+        
+    
+    
+                marker_5029099c0aac5f36f897234513544eff.setIcon(icon_64c311dfdfba33b7c5b38b22f61e4a12);
+            
+    
+            var marker_cd509d937639dab6bc8584a666f11f5e = L.marker(
+                [51.5563114834679, 0.273326044321523],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_4b3ae3806c5c36b731d9cd2638eb942d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4f228b785a5a1574afca3775c5874499 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6ce7b4aed208a75e630c3d9fbb227284 = $(`<div id="html_6ce7b4aed208a75e630c3d9fbb227284" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_4f228b785a5a1574afca3775c5874499.setContent(html_6ce7b4aed208a75e630c3d9fbb227284);
+            
+        
+
+        marker_cd509d937639dab6bc8584a666f11f5e.bindPopup(popup_4f228b785a5a1574afca3775c5874499)
+        ;
+
+        
+    
+    
+                marker_cd509d937639dab6bc8584a666f11f5e.setIcon(icon_4b3ae3806c5c36b731d9cd2638eb942d);
+            
+    
+            var marker_ceaa2ed41a90d5f0fc9a6e8a4cde5018 = L.marker(
+                [51.3538940586301, -0.09203591963733],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_d70091136dbdef675e4b4dce50ef207e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_65834a5a1fccf0196fd4ce705d0f9688 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3d27195929e6faed2337b27dddedf18b = $(`<div id="html_3d27195929e6faed2337b27dddedf18b" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_65834a5a1fccf0196fd4ce705d0f9688.setContent(html_3d27195929e6faed2337b27dddedf18b);
+            
+        
+
+        marker_ceaa2ed41a90d5f0fc9a6e8a4cde5018.bindPopup(popup_65834a5a1fccf0196fd4ce705d0f9688)
+        ;
+
+        
+    
+    
+                marker_ceaa2ed41a90d5f0fc9a6e8a4cde5018.setIcon(icon_d70091136dbdef675e4b4dce50ef207e);
+            
+    
+            var marker_62ee1dc86c7a309bc9740d044ead579b = L.marker(
+                [51.5851333000568, -0.398736365478662],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_4271ac38b87277e76acfdf87227a02ad = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c8faae05edbaa1f86c9cd8421d7fc72f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8e52dcc0c1131903dd15eb65c9063c53 = $(`<div id="html_8e52dcc0c1131903dd15eb65c9063c53" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Financially Stretched<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_c8faae05edbaa1f86c9cd8421d7fc72f.setContent(html_8e52dcc0c1131903dd15eb65c9063c53);
+            
+        
+
+        marker_62ee1dc86c7a309bc9740d044ead579b.bindPopup(popup_c8faae05edbaa1f86c9cd8421d7fc72f)
+        ;
+
+        
+    
+    
+                marker_62ee1dc86c7a309bc9740d044ead579b.setIcon(icon_4271ac38b87277e76acfdf87227a02ad);
+            
+    
+            var marker_1202f828dd24d7c67d51bedddb8f0487 = L.marker(
+                [51.6294562025693, -0.179919417840836],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_224763b2ec1f9961494cd5342354dd46 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cb1f85d81befe79d9374f114a71db7a8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_13653d5452f4b5a2f9901c52ec6ab1b7 = $(`<div id="html_13653d5452f4b5a2f9901c52ec6ab1b7" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_cb1f85d81befe79d9374f114a71db7a8.setContent(html_13653d5452f4b5a2f9901c52ec6ab1b7);
+            
+        
+
+        marker_1202f828dd24d7c67d51bedddb8f0487.bindPopup(popup_cb1f85d81befe79d9374f114a71db7a8)
+        ;
+
+        
+    
+    
+                marker_1202f828dd24d7c67d51bedddb8f0487.setIcon(icon_224763b2ec1f9961494cd5342354dd46);
+            
+    
+            var marker_a4187dc978e9e9c651f2ce55a21b8177 = L.marker(
+                [51.4503352395345, -0.403513792762538],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_bc4f3728d326e5f425dc8688e23b2448 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e4e28fd7a5c8608f742af886b7dad30d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4e562fc03852e0540d9610ca1faf087f = $(`<div id="html_4e562fc03852e0540d9610ca1faf087f" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Affluent Achievers<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_e4e28fd7a5c8608f742af886b7dad30d.setContent(html_4e562fc03852e0540d9610ca1faf087f);
+            
+        
+
+        marker_a4187dc978e9e9c651f2ce55a21b8177.bindPopup(popup_e4e28fd7a5c8608f742af886b7dad30d)
+        ;
+
+        
+    
+    
+                marker_a4187dc978e9e9c651f2ce55a21b8177.setIcon(icon_bc4f3728d326e5f425dc8688e23b2448);
+            
+    
+            var marker_cf0a70cab36ed17f112641096ccc2113 = L.marker(
+                [51.581748791755, 0.0924979839688807],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_4784c14e41a3e1c512edd1a5a431ed95 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_113eca64ecb6405fa9cfcad6f3823923 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_14ddf745a6af41c73a5d615f1bc71c48 = $(`<div id="html_14ddf745a6af41c73a5d615f1bc71c48" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_113eca64ecb6405fa9cfcad6f3823923.setContent(html_14ddf745a6af41c73a5d615f1bc71c48);
+            
+        
+
+        marker_cf0a70cab36ed17f112641096ccc2113.bindPopup(popup_113eca64ecb6405fa9cfcad6f3823923)
+        ;
+
+        
+    
+    
+                marker_cf0a70cab36ed17f112641096ccc2113.setIcon(icon_4784c14e41a3e1c512edd1a5a431ed95);
+            
+    
+            var marker_8d4da4cd0b7a60b8d6fb83670a78318d = L.marker(
+                [51.5060558643082, 0.0236243414250473],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_383da6435dbc49c499db152921d4df6e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f964c4a9dd21c7e65ce60ef43c9c42bf = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_adc8e2beb22d1acd7cc804d254a47baa = $(`<div id="html_adc8e2beb22d1acd7cc804d254a47baa" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_f964c4a9dd21c7e65ce60ef43c9c42bf.setContent(html_adc8e2beb22d1acd7cc804d254a47baa);
+            
+        
+
+        marker_8d4da4cd0b7a60b8d6fb83670a78318d.bindPopup(popup_f964c4a9dd21c7e65ce60ef43c9c42bf)
+        ;
+
+        
+    
+    
+                marker_8d4da4cd0b7a60b8d6fb83670a78318d.setIcon(icon_383da6435dbc49c499db152921d4df6e);
+            
+    
+            var marker_c295caf59413262bfb21e70df1e25c6a = L.marker(
+                [51.5352508022834, -0.141640777070667],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_0f0bb0f5d25d1c2b077bae5d77df50c5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7603079861c158f46c430366d947b048 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5d0a0479d974c78d4dd9110c30196d53 = $(`<div id="html_5d0a0479d974c78d4dd9110c30196d53" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_7603079861c158f46c430366d947b048.setContent(html_5d0a0479d974c78d4dd9110c30196d53);
+            
+        
+
+        marker_c295caf59413262bfb21e70df1e25c6a.bindPopup(popup_7603079861c158f46c430366d947b048)
+        ;
+
+        
+    
+    
+                marker_c295caf59413262bfb21e70df1e25c6a.setIcon(icon_0f0bb0f5d25d1c2b077bae5d77df50c5);
+            
+    
+            var marker_4dbf863caf4e07a0d6ca5b4491f17997 = L.marker(
+                [51.4097849462674, -0.160490528969109],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_3b66d2f184f1bfb494c5ac49a2190c8c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9f4c31cd43c5880851b995f5205fab2d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2566e02acaf9f572f4044844fdbef5b0 = $(`<div id="html_2566e02acaf9f572f4044844fdbef5b0" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_9f4c31cd43c5880851b995f5205fab2d.setContent(html_2566e02acaf9f572f4044844fdbef5b0);
+            
+        
+
+        marker_4dbf863caf4e07a0d6ca5b4491f17997.bindPopup(popup_9f4c31cd43c5880851b995f5205fab2d)
+        ;
+
+        
+    
+    
+                marker_4dbf863caf4e07a0d6ca5b4491f17997.setIcon(icon_3b66d2f184f1bfb494c5ac49a2190c8c);
+            
+    
+            var marker_f6d41251bae3ef2b21850e8ac6326b8f = L.marker(
+                [51.3587779753033, -0.0248410654036056],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_a92dc73b6d084a725f0f060899800c79 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ef4af2184737cfb966b1a4e7fdb0ac29 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8ab47da87cffcb1b668b263757e6f94b = $(`<div id="html_8ab47da87cffcb1b668b263757e6f94b" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_ef4af2184737cfb966b1a4e7fdb0ac29.setContent(html_8ab47da87cffcb1b668b263757e6f94b);
+            
+        
+
+        marker_f6d41251bae3ef2b21850e8ac6326b8f.bindPopup(popup_ef4af2184737cfb966b1a4e7fdb0ac29)
+        ;
+
+        
+    
+    
+                marker_f6d41251bae3ef2b21850e8ac6326b8f.setIcon(icon_a92dc73b6d084a725f0f060899800c79);
+            
+    
+            var marker_c3db3cd7c43f288896a977fcf76df524 = L.marker(
+                [51.4683111475626, -0.039150330139983],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_da28bc4e7ef88bd580aacd3b7c6a59d4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_61ab1a38e776729edc30fb85c82a56a4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fbd444638ef2be61e3d3273a405e5119 = $(`<div id="html_fbd444638ef2be61e3d3273a405e5119" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_61ab1a38e776729edc30fb85c82a56a4.setContent(html_fbd444638ef2be61e3d3273a405e5119);
+            
+        
+
+        marker_c3db3cd7c43f288896a977fcf76df524.bindPopup(popup_61ab1a38e776729edc30fb85c82a56a4)
+        ;
+
+        
+    
+    
+                marker_c3db3cd7c43f288896a977fcf76df524.setIcon(icon_da28bc4e7ef88bd580aacd3b7c6a59d4);
+            
+    
+            var marker_af7d890aff1eb3458006060f9f027867 = L.marker(
+                [51.6545648652967, -0.0550356611321575],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_9d3fa463239441c4fd6d9cfa5136c814 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_77096d82c723de2f63f5b70d07560cd5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8eefadc3dd0c3957f4356ad5a2a61249 = $(`<div id="html_8eefadc3dd0c3957f4356ad5a2a61249" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_77096d82c723de2f63f5b70d07560cd5.setContent(html_8eefadc3dd0c3957f4356ad5a2a61249);
+            
+        
+
+        marker_af7d890aff1eb3458006060f9f027867.bindPopup(popup_77096d82c723de2f63f5b70d07560cd5)
+        ;
+
+        
+    
+    
+                marker_af7d890aff1eb3458006060f9f027867.setIcon(icon_9d3fa463239441c4fd6d9cfa5136c814);
+            
+    
+            var marker_053f3fb88f2fdf509b449dcdfb9ded0f = L.marker(
+                [51.3284308579358, 0.0485888340612462],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_fa9657b819e8e31a5c64a5a839600716 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_67bf88974f2a9f3af40f9030a790d008 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_578bb03fb095efaf6dd55d1c21b648ee = $(`<div id="html_578bb03fb095efaf6dd55d1c21b648ee" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_67bf88974f2a9f3af40f9030a790d008.setContent(html_578bb03fb095efaf6dd55d1c21b648ee);
+            
+        
+
+        marker_053f3fb88f2fdf509b449dcdfb9ded0f.bindPopup(popup_67bf88974f2a9f3af40f9030a790d008)
+        ;
+
+        
+    
+    
+                marker_053f3fb88f2fdf509b449dcdfb9ded0f.setIcon(icon_fa9657b819e8e31a5c64a5a839600716);
+            
+    
+            var marker_c213bda02385ad57cfdd88d81d264304 = L.marker(
+                [51.5501510262681, -0.201848817140061],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_3d5228cca0edcb6d37b56d559af7b776 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_513a7b0ed37981ce1f76da381615bec4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_72fe5561426c4c81076161475635b924 = $(`<div id="html_72fe5561426c4c81076161475635b924" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_513a7b0ed37981ce1f76da381615bec4.setContent(html_72fe5561426c4c81076161475635b924);
+            
+        
+
+        marker_c213bda02385ad57cfdd88d81d264304.bindPopup(popup_513a7b0ed37981ce1f76da381615bec4)
+        ;
+
+        
+    
+    
+                marker_c213bda02385ad57cfdd88d81d264304.setIcon(icon_3d5228cca0edcb6d37b56d559af7b776);
+            
+    
+            var marker_3c53e8410d0766518571a8e86e8ac20e = L.marker(
+                [51.4417740033124, -0.341683376539045],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_1b0f798b29c5b8b4b8488ca02e8edb2d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_59de0a5dbcd4435bcbd8801476ccab72 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_eb11efa91adfeb44d7ad2065302d3ced = $(`<div id="html_eb11efa91adfeb44d7ad2065302d3ced" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Affluent Achievers<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_59de0a5dbcd4435bcbd8801476ccab72.setContent(html_eb11efa91adfeb44d7ad2065302d3ced);
+            
+        
+
+        marker_3c53e8410d0766518571a8e86e8ac20e.bindPopup(popup_59de0a5dbcd4435bcbd8801476ccab72)
+        ;
+
+        
+    
+    
+                marker_3c53e8410d0766518571a8e86e8ac20e.setIcon(icon_1b0f798b29c5b8b4b8488ca02e8edb2d);
+            
+    
+            var marker_471f0435c81badce267a95864ca6bac1 = L.marker(
+                [51.6042431347143, -0.331587282299232],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_133bf710fd26c9b02534a148c8b96de5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3b5f8f7f9c9fc0299a9931e6a3767ef8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e63623584dc3fab8c6e32f81753b2763 = $(`<div id="html_e63623584dc3fab8c6e32f81753b2763" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Affluent Achievers<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_3b5f8f7f9c9fc0299a9931e6a3767ef8.setContent(html_e63623584dc3fab8c6e32f81753b2763);
+            
+        
+
+        marker_471f0435c81badce267a95864ca6bac1.bindPopup(popup_3b5f8f7f9c9fc0299a9931e6a3767ef8)
+        ;
+
+        
+    
+    
+                marker_471f0435c81badce267a95864ca6bac1.setIcon(icon_133bf710fd26c9b02534a148c8b96de5);
+            
+    
+            var marker_8fdc468197e2af35601132404a64bf17 = L.marker(
+                [51.4085717869652, -0.0266739551740082],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_d75610af341a88e77b65fe1d1b28d4e6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_49684a40a41a19d41d2a42931d4010d7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f2fdb124a8d32e94ecd79e36ebf15472 = $(`<div id="html_f2fdb124a8d32e94ecd79e36ebf15472" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_49684a40a41a19d41d2a42931d4010d7.setContent(html_f2fdb124a8d32e94ecd79e36ebf15472);
+            
+        
+
+        marker_8fdc468197e2af35601132404a64bf17.bindPopup(popup_49684a40a41a19d41d2a42931d4010d7)
+        ;
+
+        
+    
+    
+                marker_8fdc468197e2af35601132404a64bf17.setIcon(icon_d75610af341a88e77b65fe1d1b28d4e6);
+            
+    
+            var marker_1e7bf625afc8bfa7791a1c375c9c2af6 = L.marker(
+                [51.4271007776838, -0.097743654695487],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_a3fbcec9fc46ec8e969c696fb742e8ec = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_308e83a49495e51c193922445ff24d97 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_eb33c4fee306e335d93b668f2a72857b = $(`<div id="html_eb33c4fee306e335d93b668f2a72857b" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_308e83a49495e51c193922445ff24d97.setContent(html_eb33c4fee306e335d93b668f2a72857b);
+            
+        
+
+        marker_1e7bf625afc8bfa7791a1c375c9c2af6.bindPopup(popup_308e83a49495e51c193922445ff24d97)
+        ;
+
+        
+    
+    
+                marker_1e7bf625afc8bfa7791a1c375c9c2af6.setIcon(icon_a3fbcec9fc46ec8e969c696fb742e8ec);
+            
+    
+            var marker_221aa77e8cbe5f5d64ead0af7e6e3cbf = L.marker(
+                [51.5943666015423, -0.467560132597442],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_839900ac601cf7d695b26f33ea8e7eab = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ae786021e8eb5640fbe7c97d36391b10 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ed7a7fc2c1a04730729f2bc5544446d4 = $(`<div id="html_ed7a7fc2c1a04730729f2bc5544446d4" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Financially Stretched<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_ae786021e8eb5640fbe7c97d36391b10.setContent(html_ed7a7fc2c1a04730729f2bc5544446d4);
+            
+        
+
+        marker_221aa77e8cbe5f5d64ead0af7e6e3cbf.bindPopup(popup_ae786021e8eb5640fbe7c97d36391b10)
+        ;
+
+        
+    
+    
+                marker_221aa77e8cbe5f5d64ead0af7e6e3cbf.setIcon(icon_839900ac601cf7d695b26f33ea8e7eab);
+            
+    
+            var marker_b5337daa98ccc480646fafc0228ebc79 = L.marker(
+                [51.5956945037089, -0.273561815697549],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_53b34547310dd666f4bbd1828a057c5c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_491b45c06b475cb5666fd16c5a9a3bb2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_20ebb1c7107d77e5a2b16a64afe4cd65 = $(`<div id="html_20ebb1c7107d77e5a2b16a64afe4cd65" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Financially Stretched<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_491b45c06b475cb5666fd16c5a9a3bb2.setContent(html_20ebb1c7107d77e5a2b16a64afe4cd65);
+            
+        
+
+        marker_b5337daa98ccc480646fafc0228ebc79.bindPopup(popup_491b45c06b475cb5666fd16c5a9a3bb2)
+        ;
+
+        
+    
+    
+                marker_b5337daa98ccc480646fafc0228ebc79.setIcon(icon_53b34547310dd666f4bbd1828a057c5c);
+            
+    
+            var marker_70aa7879999531b0005ce6f03e7970fe = L.marker(
+                [51.5355007400808, 0.2087740319608],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_9904602e70d5de33c7e5d5167f22f7d4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f38112e95cb89321892d87af1bc01216 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4cc8a783d549bdeb2eff7b12e0217255 = $(`<div id="html_4cc8a783d549bdeb2eff7b12e0217255" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_f38112e95cb89321892d87af1bc01216.setContent(html_4cc8a783d549bdeb2eff7b12e0217255);
+            
+        
+
+        marker_70aa7879999531b0005ce6f03e7970fe.bindPopup(popup_f38112e95cb89321892d87af1bc01216)
+        ;
+
+        
+    
+    
+                marker_70aa7879999531b0005ce6f03e7970fe.setIcon(icon_9904602e70d5de33c7e5d5167f22f7d4);
+            
+    
+            var marker_7deb6a149f0cf8f25330ef7cfac00dcd = L.marker(
+                [51.5466060669241, -0.340979103806155],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_41f271cf127fce11875070d5c0817f26 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5380fff21ddad0823c8b6b55f41e0c45 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0c4554eb9276d95c4d4c2ea75d0d1826 = $(`<div id="html_0c4554eb9276d95c4d4c2ea75d0d1826" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Financially Stretched<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_5380fff21ddad0823c8b6b55f41e0c45.setContent(html_0c4554eb9276d95c4d4c2ea75d0d1826);
+            
+        
+
+        marker_7deb6a149f0cf8f25330ef7cfac00dcd.bindPopup(popup_5380fff21ddad0823c8b6b55f41e0c45)
+        ;
+
+        
+    
+    
+                marker_7deb6a149f0cf8f25330ef7cfac00dcd.setIcon(icon_41f271cf127fce11875070d5c0817f26);
+            
+    
+            var marker_25022d648ca4a32d26589e2c08a230ae = L.marker(
+                [51.5273239440746, 0.0783676563048321],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_e52430794199b3bbfc6eef78ab440c9d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1b948fd9912df94434cc9dd2d7b0a2e5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_21c9eeffbf5082a5c8efb940cb1f10ef = $(`<div id="html_21c9eeffbf5082a5c8efb940cb1f10ef" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_1b948fd9912df94434cc9dd2d7b0a2e5.setContent(html_21c9eeffbf5082a5c8efb940cb1f10ef);
+            
+        
+
+        marker_25022d648ca4a32d26589e2c08a230ae.bindPopup(popup_1b948fd9912df94434cc9dd2d7b0a2e5)
+        ;
+
+        
+    
+    
+                marker_25022d648ca4a32d26589e2c08a230ae.setIcon(icon_e52430794199b3bbfc6eef78ab440c9d);
+            
+    
+            var marker_21bf06f33a6ad0d527708cb86345e7b5 = L.marker(
+                [51.37955522834, -0.213016572054995],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_47fc1d75f02c3d51fe8ee04ad8dc8086 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b6201ec879e2a9bd30c4100319bc596c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_35cbf0dbdcc331a8592bcfcc553614a4 = $(`<div id="html_35cbf0dbdcc331a8592bcfcc553614a4" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_b6201ec879e2a9bd30c4100319bc596c.setContent(html_35cbf0dbdcc331a8592bcfcc553614a4);
+            
+        
+
+        marker_21bf06f33a6ad0d527708cb86345e7b5.bindPopup(popup_b6201ec879e2a9bd30c4100319bc596c)
+        ;
+
+        
+    
+    
+                marker_21bf06f33a6ad0d527708cb86345e7b5.setIcon(icon_47fc1d75f02c3d51fe8ee04ad8dc8086);
+            
+    
+            var marker_13c984e090d851c7ba258f381f8aa81f = L.marker(
+                [51.5012042896437, -0.0924593993110809],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_fd035014074028318cb78d5c8c63bd00 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d23a6e83f8957a8ee0fa673d05dce6e4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ef6f544caf4ccfa8079ecff47a236e1c = $(`<div id="html_ef6f544caf4ccfa8079ecff47a236e1c" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_d23a6e83f8957a8ee0fa673d05dce6e4.setContent(html_ef6f544caf4ccfa8079ecff47a236e1c);
+            
+        
+
+        marker_13c984e090d851c7ba258f381f8aa81f.bindPopup(popup_d23a6e83f8957a8ee0fa673d05dce6e4)
+        ;
+
+        
+    
+    
+                marker_13c984e090d851c7ba258f381f8aa81f.setIcon(icon_fd035014074028318cb78d5c8c63bd00);
+            
+    
+            var marker_5689eb00a5023a989c2f94533a2a2530 = L.marker(
+                [51.4785009890558, -0.172417081974016],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_2a0d8604e39ee7ffea06184d8c5c1391 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a82698ff949bd96e9aa745d27932a6d8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fd041b211d5a9656fe545a5277382489 = $(`<div id="html_fd041b211d5a9656fe545a5277382489" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_a82698ff949bd96e9aa745d27932a6d8.setContent(html_fd041b211d5a9656fe545a5277382489);
+            
+        
+
+        marker_5689eb00a5023a989c2f94533a2a2530.bindPopup(popup_a82698ff949bd96e9aa745d27932a6d8)
+        ;
+
+        
+    
+    
+                marker_5689eb00a5023a989c2f94533a2a2530.setIcon(icon_2a0d8604e39ee7ffea06184d8c5c1391);
+            
+    
+            var marker_d32a03af5cb8ca56e287689b4ac9b6af = L.marker(
+                [51.3642343838743, 0.110717338924339],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_a48a1dd532c2208a92ff39080e5b4f30 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b07499efbd5bffa072986dd291b948aa = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2ad677754b013e6a9dbd74c923e33449 = $(`<div id="html_2ad677754b013e6a9dbd74c923e33449" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_b07499efbd5bffa072986dd291b948aa.setContent(html_2ad677754b013e6a9dbd74c923e33449);
+            
+        
+
+        marker_d32a03af5cb8ca56e287689b4ac9b6af.bindPopup(popup_b07499efbd5bffa072986dd291b948aa)
+        ;
+
+        
+    
+    
+                marker_d32a03af5cb8ca56e287689b4ac9b6af.setIcon(icon_a48a1dd532c2208a92ff39080e5b4f30);
+            
+    
+            var marker_908a72112304beda9f66c760ddbe8b61 = L.marker(
+                [51.4236967838162, 0.122078222017875],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_115937c61754a9b03e0b22c2c0e1baf8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_12ac700086b9604a7d4da08c2bc9cabf = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_62f73e17c181396abe04f753e77db02f = $(`<div id="html_62f73e17c181396abe04f753e77db02f" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Comfortable Communities<br><b>Risk:</b> Safe</div>`)[0];
+                popup_12ac700086b9604a7d4da08c2bc9cabf.setContent(html_62f73e17c181396abe04f753e77db02f);
+            
+        
+
+        marker_908a72112304beda9f66c760ddbe8b61.bindPopup(popup_12ac700086b9604a7d4da08c2bc9cabf)
+        ;
+
+        
+    
+    
+                marker_908a72112304beda9f66c760ddbe8b61.setIcon(icon_115937c61754a9b03e0b22c2c0e1baf8);
+            
+    
+            var marker_8412a7f7e3c4c0c7203d890209ca6b45 = L.marker(
+                [51.580282656559, 0.0335288599560173],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_a985086b08acc826c96412e75f2eda1a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_17ff2c3b731fcac38e3ed96e9a39ac82 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2dc3ddc831de02d12c7198979f497a66 = $(`<div id="html_2dc3ddc831de02d12c7198979f497a66" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_17ff2c3b731fcac38e3ed96e9a39ac82.setContent(html_2dc3ddc831de02d12c7198979f497a66);
+            
+        
+
+        marker_8412a7f7e3c4c0c7203d890209ca6b45.bindPopup(popup_17ff2c3b731fcac38e3ed96e9a39ac82)
+        ;
+
+        
+    
+    
+                marker_8412a7f7e3c4c0c7203d890209ca6b45.setIcon(icon_a985086b08acc826c96412e75f2eda1a);
+            
+    
+            var marker_318b73c3d16d972ee21d2399c0629df7 = L.marker(
+                [51.4740365735446, 0.174727954306601],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_8d26dae4b283c0bfd38996a135f6a754 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_001b88e695c5591ea2e7bdc9e0e5272e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_db5ac342075876b35f1011696ca362c9 = $(`<div id="html_db5ac342075876b35f1011696ca362c9" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Comfortable Communities<br><b>Risk:</b> Safe</div>`)[0];
+                popup_001b88e695c5591ea2e7bdc9e0e5272e.setContent(html_db5ac342075876b35f1011696ca362c9);
+            
+        
+
+        marker_318b73c3d16d972ee21d2399c0629df7.bindPopup(popup_001b88e695c5591ea2e7bdc9e0e5272e)
+        ;
+
+        
+    
+    
+                marker_318b73c3d16d972ee21d2399c0629df7.setIcon(icon_8d26dae4b283c0bfd38996a135f6a754);
+            
+    
+            var marker_88cb09d7f313bca5a0bcc0329c0249cc = L.marker(
+                [51.4484638408557, 0.0277237230368065],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_66ffae8f6f0229be5e940a0417d54c0f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5885382064429b3961b17812d1b75d75 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_326e517a760e1202f1b5de7dde175135 = $(`<div id="html_326e517a760e1202f1b5de7dde175135" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_5885382064429b3961b17812d1b75d75.setContent(html_326e517a760e1202f1b5de7dde175135);
+            
+        
+
+        marker_88cb09d7f313bca5a0bcc0329c0249cc.bindPopup(popup_5885382064429b3961b17812d1b75d75)
+        ;
+
+        
+    
+    
+                marker_88cb09d7f313bca5a0bcc0329c0249cc.setIcon(icon_66ffae8f6f0229be5e940a0417d54c0f);
+            
+    
+            var marker_3a8d6f564e68e081e90b94f98c82eb51 = L.marker(
+                [51.5384738739004, -0.025058849453277],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_39e24efda66d60df9f2b355ae148bebf = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_df7da24836dc0910861db77861ec9eb5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0b5ca4128f20acff87070f2ca83f7cfd = $(`<div id="html_0b5ca4128f20acff87070f2ca83f7cfd" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_df7da24836dc0910861db77861ec9eb5.setContent(html_0b5ca4128f20acff87070f2ca83f7cfd);
+            
+        
+
+        marker_3a8d6f564e68e081e90b94f98c82eb51.bindPopup(popup_df7da24836dc0910861db77861ec9eb5)
+        ;
+
+        
+    
+    
+                marker_3a8d6f564e68e081e90b94f98c82eb51.setIcon(icon_39e24efda66d60df9f2b355ae148bebf);
+            
+    
+            var marker_5c3a0a12346e7d8bf9087dea742f1162 = L.marker(
+                [51.5904058107641, 0.15147563733399],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_1200e9572a70acf04f2faef8953a1898 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_389e72235f0ccef01007c8be87d061b7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_97b83af521877d3baf3685bc4c13e2f7 = $(`<div id="html_97b83af521877d3baf3685bc4c13e2f7" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_389e72235f0ccef01007c8be87d061b7.setContent(html_97b83af521877d3baf3685bc4c13e2f7);
+            
+        
+
+        marker_5c3a0a12346e7d8bf9087dea742f1162.bindPopup(popup_389e72235f0ccef01007c8be87d061b7)
+        ;
+
+        
+    
+    
+                marker_5c3a0a12346e7d8bf9087dea742f1162.setIcon(icon_1200e9572a70acf04f2faef8953a1898);
+            
+    
+            var marker_76ee8c85b950aeb1749ea509b008ed1f = L.marker(
+                [51.5983311367079, 0.21676292417449],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_d174ce6ab6ac45bf9b8df246987721e3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c8e6c4cd9b806f7688c0b3c2369865e6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fac891875094e9f7447c791f803de264 = $(`<div id="html_fac891875094e9f7447c791f803de264" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Not Private Households<br><b>Risk:</b> Do Not Add</div>`)[0];
+                popup_c8e6c4cd9b806f7688c0b3c2369865e6.setContent(html_fac891875094e9f7447c791f803de264);
+            
+        
+
+        marker_76ee8c85b950aeb1749ea509b008ed1f.bindPopup(popup_c8e6c4cd9b806f7688c0b3c2369865e6)
+        ;
+
+        
+    
+    
+                marker_76ee8c85b950aeb1749ea509b008ed1f.setIcon(icon_d174ce6ab6ac45bf9b8df246987721e3);
+            
+    
+            var marker_2f95ac6db2ee4d3fafa4819a45653079 = L.marker(
+                [51.6232402223815, -0.230667043174582],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_ce2c1599b84fb29dfe1356618a02e9c4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3a3755f96068cddc347b55902c3da7cd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_47813319b7a4d084ae4d09a197db52ec = $(`<div id="html_47813319b7a4d084ae4d09a197db52ec" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_3a3755f96068cddc347b55902c3da7cd.setContent(html_47813319b7a4d084ae4d09a197db52ec);
+            
+        
+
+        marker_2f95ac6db2ee4d3fafa4819a45653079.bindPopup(popup_3a3755f96068cddc347b55902c3da7cd)
+        ;
+
+        
+    
+    
+                marker_2f95ac6db2ee4d3fafa4819a45653079.setIcon(icon_ce2c1599b84fb29dfe1356618a02e9c4);
+            
+    
+            var marker_3cec627a8227ba5b84f54f13e7fb02b0 = L.marker(
+                [51.4542056008396, -0.24116285381836],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_3c3e077f89f08b4c1b2362f97667716f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_857ed4f653b70571f8d4937e065adb4b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8d19bb3d7dfa0ff46b0a440216d52d62 = $(`<div id="html_8d19bb3d7dfa0ff46b0a440216d52d62" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Affluent Achievers<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_857ed4f653b70571f8d4937e065adb4b.setContent(html_8d19bb3d7dfa0ff46b0a440216d52d62);
+            
+        
+
+        marker_3cec627a8227ba5b84f54f13e7fb02b0.bindPopup(popup_857ed4f653b70571f8d4937e065adb4b)
+        ;
+
+        
+    
+    
+                marker_3cec627a8227ba5b84f54f13e7fb02b0.setIcon(icon_3c3e077f89f08b4c1b2362f97667716f);
+            
+    
+            var marker_6a42b4040462a81d532810c90ac9889a = L.marker(
+                [51.3346495557552, -0.142810964203447],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_13ab23727f18cdf2c381295a597ef2a7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d329b552e433c165fd5dd70b9df55cc9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_57692570a70a3705026340b6bde15ae7 = $(`<div id="html_57692570a70a3705026340b6bde15ae7" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_d329b552e433c165fd5dd70b9df55cc9.setContent(html_57692570a70a3705026340b6bde15ae7);
+            
+        
+
+        marker_6a42b4040462a81d532810c90ac9889a.bindPopup(popup_d329b552e433c165fd5dd70b9df55cc9)
+        ;
+
+        
+    
+    
+                marker_6a42b4040462a81d532810c90ac9889a.setIcon(icon_13ab23727f18cdf2c381295a597ef2a7);
+            
+    
+            var marker_8c326e7e72ca62ee73ea216a0b04b6ae = L.marker(
+                [51.4734756931459, 0.0945374125247366],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_b46ac3ef30116bd7ca5eb55f6581c336 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7e2c19f21611b0ce2c0120e61341ed2b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9deb01ffe317fb2b2ea9c63228779d61 = $(`<div id="html_9deb01ffe317fb2b2ea9c63228779d61" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Comfortable Communities<br><b>Risk:</b> Safe</div>`)[0];
+                popup_7e2c19f21611b0ce2c0120e61341ed2b.setContent(html_9deb01ffe317fb2b2ea9c63228779d61);
+            
+        
+
+        marker_8c326e7e72ca62ee73ea216a0b04b6ae.bindPopup(popup_7e2c19f21611b0ce2c0120e61341ed2b)
+        ;
+
+        
+    
+    
+                marker_8c326e7e72ca62ee73ea216a0b04b6ae.setIcon(icon_b46ac3ef30116bd7ca5eb55f6581c336);
+            
+    
+            var marker_a73c4edf53f6abda75e393dd52202b4e = L.marker(
+                [51.6122378785543, -0.0145090023237207],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_6d553a11d3dd390f69fee45bb25a7daf = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_902abb7159217ad889b3e296de140641 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_648450aa04a8842b6ff2ac5016e900df = $(`<div id="html_648450aa04a8842b6ff2ac5016e900df" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Rising Prosperity<br><b>Risk:</b> Safe</div>`)[0];
+                popup_902abb7159217ad889b3e296de140641.setContent(html_648450aa04a8842b6ff2ac5016e900df);
+            
+        
+
+        marker_a73c4edf53f6abda75e393dd52202b4e.bindPopup(popup_902abb7159217ad889b3e296de140641)
+        ;
+
+        
+    
+    
+                marker_a73c4edf53f6abda75e393dd52202b4e.setIcon(icon_6d553a11d3dd390f69fee45bb25a7daf);
+            
+    
+            var marker_6fe70c80894f933cc9e361e4da4ce12b = L.marker(
+                [51.5822612906416, -0.0734695870882164],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_98035908f95b5f19dd290578bfec8259 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_af00e130ca2bf8fac7351b7337ca810e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_695e98f9188fbc672c8a9774fd4e7da6 = $(`<div id="html_695e98f9188fbc672c8a9774fd4e7da6" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_af00e130ca2bf8fac7351b7337ca810e.setContent(html_695e98f9188fbc672c8a9774fd4e7da6);
+            
+        
+
+        marker_6fe70c80894f933cc9e361e4da4ce12b.bindPopup(popup_af00e130ca2bf8fac7351b7337ca810e)
+        ;
+
+        
+    
+    
+                marker_6fe70c80894f933cc9e361e4da4ce12b.setIcon(icon_98035908f95b5f19dd290578bfec8259);
+            
+    
+            var marker_f37096363043645bf3da9ed25f70c66a = L.marker(
+                [51.5104652994735, -0.395363750509298],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_9bc9ed37ae8d68c58273ceaf67efadd6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b12a60d2bcd8f18de67bf954e6110fce = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2d66eed37320f433233fdc077a8c2986 = $(`<div id="html_2d66eed37320f433233fdc077a8c2986" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Financially Stretched<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_b12a60d2bcd8f18de67bf954e6110fce.setContent(html_2d66eed37320f433233fdc077a8c2986);
+            
+        
+
+        marker_f37096363043645bf3da9ed25f70c66a.bindPopup(popup_b12a60d2bcd8f18de67bf954e6110fce)
+        ;
+
+        
+    
+    
+                marker_f37096363043645bf3da9ed25f70c66a.setIcon(icon_9bc9ed37ae8d68c58273ceaf67efadd6);
+            
+    
+            var marker_7be6ee8d3cab85f7a0700d9ee5b7154a = L.marker(
+                [51.5918880560144, -0.130708190828946],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_aa8fcd2c34e05c195f7f127b7757bff9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3aafeb59a7ac7ab83388d5b9311709b0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d84a564b7e623589045114f27735b61f = $(`<div id="html_d84a564b7e623589045114f27735b61f" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Urban Adversity<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_3aafeb59a7ac7ab83388d5b9311709b0.setContent(html_d84a564b7e623589045114f27735b61f);
+            
+        
+
+        marker_7be6ee8d3cab85f7a0700d9ee5b7154a.bindPopup(popup_3aafeb59a7ac7ab83388d5b9311709b0)
+        ;
+
+        
+    
+    
+                marker_7be6ee8d3cab85f7a0700d9ee5b7154a.setIcon(icon_aa8fcd2c34e05c195f7f127b7757bff9);
+            
+    
+            var marker_9f0fe4965c84f580e84e7b873f463e90 = L.marker(
+                [51.4920333485366, -0.312048887643969],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_47ff3e7738193de44d023a01c30f854c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d7225764bc9f3afa79f879bc801dfd35 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_37d4bcc5aa6292f0308968b1b0f21ad3 = $(`<div id="html_37d4bcc5aa6292f0308968b1b0f21ad3" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Affluent Achievers<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_d7225764bc9f3afa79f879bc801dfd35.setContent(html_37d4bcc5aa6292f0308968b1b0f21ad3);
+            
+        
+
+        marker_9f0fe4965c84f580e84e7b873f463e90.bindPopup(popup_d7225764bc9f3afa79f879bc801dfd35)
+        ;
+
+        
+    
+    
+                marker_9f0fe4965c84f580e84e7b873f463e90.setIcon(icon_47ff3e7738193de44d023a01c30f854c);
+            
+    
+            var marker_29068a22b2519f0afd15a419db59d952 = L.marker(
+                [51.5395939055898, -0.455614409686707],
+                {
+}
+            ).addTo(map_89209072d69a108a6cf8a8f81aba1a38);
+        
+    
+            var icon_ae9e418bb210f689366356774bca3840 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "flash",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5ca17f49437ce886b6b8b8646f63978c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_81d9fe337e9d46b28dcacb9a11c55b5d = $(`<div id="html_81d9fe337e9d46b28dcacb9a11c55b5d" style="width: 100.0%; height: 100.0%;"><b>Segment:</b> Financially Stretched<br><b>Risk:</b> Monitor</div>`)[0];
+                popup_5ca17f49437ce886b6b8b8646f63978c.setContent(html_81d9fe337e9d46b28dcacb9a11c55b5d);
+            
+        
+
+        marker_29068a22b2519f0afd15a419db59d952.bindPopup(popup_5ca17f49437ce886b6b8b8646f63978c)
+        ;
+
+        
+    
+    
+                marker_29068a22b2519f0afd15a419db59d952.setIcon(icon_ae9e418bb210f689366356774bca3840);
+            
+</script>
+</html>

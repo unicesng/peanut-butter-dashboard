@@ -191,10 +191,10 @@ def get_chargepoints(n: int = 100):
         csv_path = "suggested_charging_locations.csv"
         pd.DataFrame(centroids, columns=['latitude', 'longitude']).to_csv(csv_path, index=False)
 
-        S3_BUCKET = os.getenv("S3_BUCKET"),
-        S3_KEY = os.getenv("S3_KEY"),
-        S3_PATH = os.getenv("S3_PATH"),
-        IAM_ROLE_ARN = os.getenv("IAM_ROLE_ARN")
+        S3_BUCKET = 'peanut-butter-project'
+        S3_KEY = 'suggested/suggested_charging_locations.csv'
+        S3_PATH = f's3://{S3_BUCKET}/{S3_KEY}'
+        IAM_ROLE_ARN = 'arn:aws:iam::536697253251:role/redshiftreads3'
 
         s3 = boto3.client('s3')
         s3.upload_file(csv_path, S3_BUCKET, S3_KEY)
@@ -225,44 +225,73 @@ def get_chargepoints(n: int = 100):
 
 
 @ev_app.get("/final_chargepoints")
-async def final_chargepoints(
-    energy_per_charger_kwh=40,
-):
-    
+def final_chargepoints(energy_per_charger_kwh: float = 40):
+    print("🚀 Entered /final_chargepoints route")
+
     conn = get_redshift_connection()
+    cursor = conn.cursor()
 
+    # SQL queries
     query_charging = "SELECT * FROM public.suggested_locations"
-    query_energy = "SELECT * FROM public.avg_daily_energy_per_lclid"  # replace with actual table
-    query_segments = "SELECT * FROM public.acorn_segments"  # replace with actual table
+    query_energy = "SELECT * FROM public.avg_daily_energy_per_lclid"
+    query_segments = "SELECT * FROM public.acorn_segments"
 
-    # Fetch rows from Redshift
-    charging_rows = await conn.fetch(query_charging)
-    energy_rows = await conn.fetch(query_energy)
-    segment_rows = await conn.fetch(query_segments)
+    try:
+        # Charging locations
+        cursor.execute(query_charging)
+        charging_rows = cursor.fetchall()
+        charging_df = pd.DataFrame(charging_rows)
+        charging_df.columns = ["Latitude", "Longitude"]
 
-    # Convert to pandas DataFrames
-    charging_df = pd.DataFrame([dict(row) for row in charging_rows])
-    energy_df = pd.DataFrame([dict(row) for row in energy_rows])
-    segments_df = pd.DataFrame([dict(row) for row in segment_rows])
+        # Energy data
+        cursor.execute(query_energy)
+        energy_rows = cursor.fetchall()
+        energy_df = pd.DataFrame(energy_rows)
+        energy_df.columns = ["Segment", "energy_sum"]
 
-    # Parse bounding box coordinates
+        # Segment boundaries
+        cursor.execute(query_segments)
+        segment_rows = cursor.fetchall()
+        segments_df = pd.DataFrame(segment_rows)
+        segments_df.columns = [
+            "Segment",         
+            "Description",     
+            "acorn_group",     
+            "group_detail",   
+            "NW",            
+            "NE",            
+            "SW",             
+            "SE"             
+        ]
+
+    except Exception as e:
+        print(f"❌ Error fetching data: {e}")
+        raise HTTPException(status_code=500, detail="Database query failed")
+
+    if charging_df.empty or energy_df.empty or segments_df.empty:
+        return {"error": "One or more input tables are empty."}
+
+    # Coordinate parser
     def parse_coord(coord_str):
         lat, lon = coord_str.strip("()").split(", ")
         return float(lon), float(lat)
 
-    # Build segment polygons
+    # Build polygons
     segment_polygons = []
     for _, row in segments_df.iterrows():
-        polygon = Polygon([
-            parse_coord(row["NW"]),
-            parse_coord(row["NE"]),
-            parse_coord(row["SE"]),
-            parse_coord(row["SW"]),
-        ]).buffer(0.0005)
-        segment_polygons.append({
-            "Segment": row["Segment"],
-            "Polygon": polygon
-        })
+        try:
+            polygon = Polygon([
+                parse_coord(row["NW"]),
+                parse_coord(row["NE"]),
+                parse_coord(row["SE"]),
+                parse_coord(row["SW"]),
+            ]).buffer(0.0005)
+            segment_polygons.append({
+                "Segment": row["Segment"],
+                "Polygon": polygon
+            })
+        except Exception as e:
+            print(f"Error building polygon for segment {row.get('Segment', 'unknown')}: {e}")
 
     # Assign segment to each charger
     def assign_segment(lat, lon, polygons):
@@ -272,6 +301,7 @@ async def final_chargepoints(
                 return entry["Segment"]
         return "Unclassified"
 
+    charging_df.dropna(subset=["Latitude", "Longitude"], inplace=True)
     charging_df["Segment"] = charging_df.apply(
         lambda row: assign_segment(row["Latitude"], row["Longitude"], segment_polygons),
         axis=1
@@ -281,14 +311,14 @@ async def final_chargepoints(
     charger_counts = charging_df["Segment"].value_counts().reset_index()
     charger_counts.columns = ["Segment", "New Chargers"]
 
-    # Merge and calculate energy load
+    # Merge with energy data
     combined_df = energy_df.merge(charger_counts, on="Segment", how="left")
     combined_df["New Chargers"] = combined_df["New Chargers"].fillna(0)
     combined_df["New Load (kWh)"] = combined_df["New Chargers"] * energy_per_charger_kwh
     combined_df["New Total Load"] = combined_df["energy_sum"] + combined_df["New Load (kWh)"]
     combined_df["Increase (%)"] = (combined_df["New Load (kWh)"] / combined_df["energy_sum"]) * 100
 
-    # Risk flag
+    # Risk flagging
     def flag_risk(pct):
         if pct <= 5:
             return "Safe"
@@ -301,7 +331,7 @@ async def final_chargepoints(
 
     combined_df["Risk Level"] = combined_df["Increase (%)"].apply(flag_risk)
 
-    # Determine verdict
+    # Final decision
     if "Do Not Add" in combined_df["Risk Level"].values:
         decision = "❌ Rejected – at least one segment exceeds 30% load increase"
     elif "Caution" in combined_df["Risk Level"].values:
@@ -313,6 +343,46 @@ async def final_chargepoints(
     print(combined_df[["Segment", "New Chargers", "Increase (%)", "Risk Level"]])
     print("\nDecision:", decision)
 
-    return combined_df, decision, charging_df
+    # Generate map
+    map_path = generate_charger_risk_map(charging_df, combined_df)
 
+    return {
+        "summary": combined_df.to_dict(orient="records"),
+        "decision": decision,
+        "map_file": map_path
+    }
+
+
+# Helper: Generate map
+def generate_charger_risk_map(charging_df, risk_df, output_map="charging_port_risk_map.html"):
+    merged_df = charging_df.merge(
+        risk_df[["Segment", "Risk Level"]],
+        on="Segment",
+        how="left"
+    )
+
+    risk_colors = {
+        "Safe": "green",
+        "Monitor": "lightred",
+        "Caution": "orange",
+        "Do Not Add": "red",
+        "Unclassified": "gray"
+    }
+
+    risk_map = folium.Map(
+        location=[charging_df["Latitude"].mean(), charging_df["Longitude"].mean()],
+        zoom_start=11
+    )
+
+    for _, row in merged_df.iterrows():
+        color = risk_colors.get(row["Risk Level"], "gray")
+        folium.Marker(
+            location=[row["Latitude"], row["Longitude"]],
+            icon=folium.Icon(color=color, icon="flash"),
+            popup=(f"<b>Segment:</b> {row['Segment']}<br><b>Risk:</b> {row['Risk Level']}")
+        ).add_to(risk_map)
+
+    risk_map.save(output_map)
+    print(f"✅ Map saved to: {output_map}")
+    return output_map
 
