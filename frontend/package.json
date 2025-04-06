@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.782.0",
+    "@aws-sdk/s3-request-presigner": "^3.782.0",
     "@headlessui/react": "^2.2.0",
     "@internationalized/date": "^3.7.0",
     "@radix-ui/react-accordion": "^1.2.3",
