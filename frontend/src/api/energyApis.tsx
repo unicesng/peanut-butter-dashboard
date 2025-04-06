@@ -54,6 +54,7 @@ export const GetEnergyFactors = async () => {
         throw error;
     }
 }
+
 export const GetProjectedEnergyConsumption = async () => {
     try {
         const url = `${process.env.NEXT_PUBLIC_ENERGY_API}/projected-energy-consumption`;

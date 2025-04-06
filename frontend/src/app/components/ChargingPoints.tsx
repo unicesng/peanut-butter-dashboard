@@ -30,9 +30,9 @@ interface ChargingData {
   summary: SegmentSummary[];
 }
 
-const ChargingPoints: React.FC = () => {
+const ChargingPoints = () => {
   const [data, setData] = useState<ChargingData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,6 +42,7 @@ const ChargingPoints: React.FC = () => {
   const fetchData = async () => {
     try {
       const responseData = await GetFinalChargingPoints();
+      console.log("retrieving charging data")
       setData(responseData);
       setLoading(false);
     } catch (err) {
@@ -103,7 +104,7 @@ const ChargingPoints: React.FC = () => {
       <div className="flex items-center justify-center h-64">
         <div className="flex flex-col items-center space-y-2">
           <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-          <span>Loading charging risk assessment...</span>
+          <span>Loading electric vehicles charging point analysis ...</span>
         </div>
       </div>
     );
@@ -132,12 +133,6 @@ const ChargingPoints: React.FC = () => {
       </div>
     );
   }
-
-  // Calculate risk distribution
-  const riskDistribution = data.summary.reduce<Record<string, number>>((acc, row) => {
-    acc[row["Risk Level"]] = (acc[row["Risk Level"]] || 0) + 1;
-    return acc;
-  }, {});
 
   return (
     <div className="p-4 space-y-8">
@@ -230,41 +225,6 @@ const ChargingPoints: React.FC = () => {
                 ))}
               </tbody>
             </table>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Risk Level Distribution</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col space-y-4">
-            {Object.entries(riskDistribution).map(([risk, count]) => {
-              const percentage = (count / data.summary.length) * 100;
-              const colors = {
-                "Safe": "bg-green-500",
-                "Monitor": "bg-blue-500",
-                "Caution": "bg-amber-500",
-                "Do Not Add": "bg-red-500",
-                "Unclassified": "bg-gray-500"
-              };
-              
-              return (
-                <div key={risk} className="space-y-1">
-                  <div className="flex justify-between text-sm">
-                    <span className="font-medium">{risk}</span>
-                    <span>{count} segments ({percentage.toFixed(1)}%)</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className={`${colors[risk as RiskLevel] || "bg-gray-500"} h-2 rounded-full`} 
-                      style={{ width: `${percentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </CardContent>
       </Card>
