@@ -5,3 +5,8 @@ virtualenv
 dotenv 
 python-dotenv
 starlette
+shapely
+folium
+pandas
+numpy
+scipy
