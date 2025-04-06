@@ -13,7 +13,8 @@ export default function RealTimeConsumption() {
             try {
                 const res = await fetch('/api/aggregate-consumption?type=time-series');
                 const data = await res.json();
-                setTimeSeriesData(data.timeSeries);
+                const reversed = [...data.timeSeries].reverse();
+                setTimeSeriesData(reversed);
             } catch (err) {
                 console.error(err);
             } finally {
