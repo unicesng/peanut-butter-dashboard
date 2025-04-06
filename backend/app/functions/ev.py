@@ -5,6 +5,8 @@ import folium
 from shapely.geometry import Point, Polygon
 import numpy as np
 from scipy.cluster.vq import kmeans2
+import boto3
+import os
 
 # Create a FastAPI router instead of the app instance
 ev_app = APIRouter()
@@ -16,48 +18,53 @@ async def health_check():
     return "Server OK Redshift OK"
 
 @ev_app.get("/get_chargepoints")
-async def get_chargepoints(n=100):
+def get_chargepoints(n: int = 100):
+
+    # === Step 0: Redshift connection ===
     conn = get_redshift_connection()
     try:
         query = "SELECT * FROM public.EV_chargepoints"
-        rows = await conn.fetch(query)
+        with conn.cursor() as cur:
+            cur.execute(query)
+            columns = [desc[0] for desc in cur.description]
+            rows = cur.fetchall()
+            df = pd.DataFrame(rows, columns=columns)
 
-        # Convert rows to pandas DataFrame
-        df = pd.DataFrame([dict(row) for row in rows])
+        # Normalize column names
+        df.columns = df.columns.str.strip().str.lower()
 
         # Clean and prep data
-        df[['Latitude', 'Longitude']] = df[['Latitude', 'Longitude']].apply(pd.to_numeric, errors='coerce')
-        df.dropna(subset=['Latitude', 'Longitude'], inplace=True)
+        df[['latitude', 'longitude']] = df[['latitude', 'longitude']].apply(pd.to_numeric, errors='coerce')
+        df.dropna(subset=['latitude', 'longitude'], inplace=True)
 
-        # === STEP 2: High Usage & Availability Classification ===
-        df['High Usage'] = (
-            (df['Energy Consumption (kWh)'] > (df['Charging Station Capacity (kW)'] / 2)) &
-            (df['Availability Status'] != 'Out of Service')
+        df['high usage'] = (
+            (df['energy consumption (kwh)'] > (df['charging station capacity (kw)'] / 2)) &
+            (df['availability status'] != 'Out of Service')
         )
-        df['Is Unavailable'] = df['Availability Status'] == 'Out of Service'
+        
+        df['is unavailable'] = df['availability status'] == 'Out of Service'
 
         # === STEP 3: KMeans Clustering (Suggested Locations) ===
-        coordinates = df[['Latitude', 'Longitude']].to_numpy()
+        coordinates = df[['latitude', 'longitude']].to_numpy()
         k = n
         centroids, labels = kmeans2(coordinates, k=k, minit='++')
-        df['Cluster'] = labels
+        df['cluster'] = labels
 
         # === STEP 4: Create Map and Layers ===
-        map_ev = folium.Map(location=[df['Latitude'].mean(), df['Longitude'].mean()], zoom_start=12)
+        map_ev = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=12)
 
-        # Feature groups
-        group_all = folium.FeatureGroup(name="All Stations").add_to(map_ev)
+        group_all = folium.FeatureGroup(name="All Available Stations").add_to(map_ev)
         group_high = folium.FeatureGroup(name="High Usage Stations").add_to(map_ev)
         group_unavailable = folium.FeatureGroup(name="Unavailable Stations").add_to(map_ev)
         group_suggested = folium.FeatureGroup(name="Suggested Charging Points").add_to(map_ev)
 
         # === STEP 5: Plot Charging Stations ===
         for _, row in df.iterrows():
-            lat, lon = row['Latitude'], row['Longitude']
-            usage = row['Usage Frequency (Daily Sessions)']
-            capacity = row['Charging Station Capacity (kW)']
-            status = row['Availability Status']
-            popup_text = f"{row['Station Type']}<br>Usage: {usage} sessions<br>Status: {status}"
+            lat, lon = row['latitude'], row['longitude']
+            usage = row['usage frequency (daily sessions)']
+            capacity = row['charging station capacity (kw)']
+            status = row['availability status']
+            popup_text = f"{row['station type']}<br>Usage: {usage} sessions<br>Status: {status}"
 
             if status in ['Available', 'In Use']:
                 folium.CircleMarker(
@@ -68,7 +75,7 @@ async def get_chargepoints(n=100):
                     popup=popup_text,
                 ).add_to(group_all)
 
-            if row['High Usage']:
+            if row['high usage']:
                 folium.CircleMarker(
                     location=[lat, lon],
                     radius=6,
@@ -94,20 +101,48 @@ async def get_chargepoints(n=100):
                 popup="🔌 Suggested Charging Point"
             ).add_to(group_suggested)
 
-        # Add Layer Control
         folium.LayerControl(collapsed=False).add_to(map_ev)
-
-        # Save map and centroids
         map_ev.save("ev_charging_map_filtered.html")
-        pd.DataFrame(centroids, columns=['Latitude', 'Longitude']).to_csv("suggested_charging_locations.csv", index=False)
 
-        return {"message": "Map and suggested locations saved successfully."}
+        # === STEP 7: Upload CSV to S3 and COPY to Redshift ===
+        csv_path = "suggested_charging_locations.csv"
+        pd.DataFrame(centroids, columns=['latitude', 'longitude']).to_csv(csv_path, index=False)
+
+        S3_BUCKET = os.getenv("S3_BUCKET"),
+        S3_KEY = os.getenv("S3_KEY"),
+        S3_PATH = os.getenv("S3_PATH"),
+        IAM_ROLE_ARN = os.getenv("IAM_ROLE_ARN")
+
+        s3 = boto3.client('s3')
+        s3.upload_file(csv_path, S3_BUCKET, S3_KEY)
+
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS public.suggested_locations (
+                    latitude FLOAT,
+                    longitude FLOAT
+                );
+            """)
+            cur.execute("TRUNCATE public.suggested_locations;")
+            cur.execute(f"""
+                COPY public.suggested_locations
+                FROM '{S3_PATH}'
+                IAM_ROLE '{IAM_ROLE_ARN}'
+                FORMAT AS CSV
+                IGNOREHEADER 1;
+            """)
+            conn.commit()
+
+        os.remove(csv_path)
+        # === Final Return ===
+        return {"message": "Map saved and suggested locations uploaded to Redshift successfully."}
 
     finally:
-        await conn.close()
+        conn.close()
 
-@ev_app.get("/get_chargepoints")
-async def get_chargepoints(
+
+@ev_app.get("/final_chargepoints")
+async def final_chargepoints(
     energy_per_charger_kwh=40,
 ):
     
@@ -126,10 +161,6 @@ async def get_chargepoints(
     charging_df = pd.DataFrame([dict(row) for row in charging_rows])
     energy_df = pd.DataFrame([dict(row) for row in energy_rows])
     segments_df = pd.DataFrame([dict(row) for row in segment_rows])
-
-    charging_df = pd.read_csv(charging_file)
-    energy_df = pd.read_csv(energy_file)
-    segments_df = pd.read_csv(segment_file)
 
     # Parse bounding box coordinates
     def parse_coord(coord_str):
