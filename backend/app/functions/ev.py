@@ -37,15 +37,26 @@ async def adoptionRate():
     conn = get_redshift_connection()
     cursor = conn.cursor()
     query = """
-        SELECT *
-        FROM final_merged_data
+        SELECT 
+            year,
+            electricvehicles AS ev_count,
+            nonelectric AS non_ev_count,
+            adoptionrate AS ev_adoption_rate
+        FROM dev.public.ev_adoption
+        ORDER BY year desc
     """
     cursor.execute(query)
     rows = cursor.fetchall()
+    row = rows[0]
 
     conn.close()
 
-    return rows
+    return ({
+             "year": row[0],
+             "electric": row[1],
+             "nonelectric": row[2],
+             "adoptionrate": row[3]
+        } for row in rows)
 
 @ev_app.get("/manufacturers")
 async def manufacturers():
