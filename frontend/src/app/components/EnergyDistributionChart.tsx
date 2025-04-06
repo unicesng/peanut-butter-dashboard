@@ -17,50 +17,56 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
-];
+import { useEffect, useState } from "react";
+import { GetEnergyDistribution } from "@/api/energyApis";
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  count: {
+    label: "Households",
   },
-  chrome: {
-    label: "Chrome",
+  high: {
+    label: "High (> 13.1) ",
     color: "hsl(var(--chart-1))",
   },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
+  medium: {
+    label: "Medium (<13.1) ",
     color: "hsl(var(--chart-3))",
   },
-  edge: {
-    label: "Edge",
+  low: {
+    label: "Low (<4.8>) ",
     color: "hsl(var(--chart-4))",
   },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
+
 } satisfies ChartConfig;
 
+interface EnergyCategory {
+  category: "low" | "medium" | "high";
+  count: number;
+}
+
+type EnergyDistributionChartData = EnergyCategory[];
+
 export function EnergyDistributionChart() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, []);
+  const [chartData, setChartData] = useState<EnergyDistributionChartData>([]);
+
+  useEffect(() => {
+    fetchData();
+  }, [])
+
+  const fetchData = async () => {
+    try {
+      const data = await GetEnergyDistribution();
+      setChartData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <Card className="flex flex-col w-1/3 m-2">
       <CardHeader className="items-center pb-0">
         <CardTitle>Energy Distribution Among Households</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>November 2011 - February 2014</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -74,9 +80,9 @@ export function EnergyDistributionChart() {
             />
             <Pie
               data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
-              innerRadius={60}
+              dataKey="count"
+              nameKey="category"
+              innerRadius={75}
               strokeWidth={5}
             >
               <Label
@@ -94,7 +100,7 @@ export function EnergyDistributionChart() {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {chartData.reduce((acc, curr) => acc + curr.count, 0).toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -114,7 +120,7 @@ export function EnergyDistributionChart() {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="leading-none text-muted-foreground">
-          Showing % of household with low, medium, high energy usage the last 6 months
+          Showing % of household with low, medium, high energy usage overall
         </div>
       </CardFooter>
     </Card>

@@ -1,11 +1,14 @@
+"use client"
+
 import { AnnualGrowthRateOfEV } from "@/app/components/AnnualGrowthRateEV";
 import ChargingPoints from "@/app/components/ChargingPoints";
 import { EVAdoptionRateCard } from "@/app/components/EVAdoptionRateCard";
-import { EVManufacturers } from "@/app/components/EVManufacturers";
-import ForecastEVTrends from "@/app/components/ForecastEVTrends";
 import { ProjectedEVGrowth } from "@/app/components/ProjectedEVGrowth";
+import { useState } from "react";
 
 export default function ElectricVehicles() {
+
+  const [activeTab, setActiveTab] = useState("Dashboard");
   return (
     <section className="bg-white dark:bg-gray-900 ">
       <div className="border-b border-gray-200 pb-4 py-8 px-8">
@@ -15,19 +18,44 @@ export default function ElectricVehicles() {
         <p className="text-gray-500">
           Insights on electric vehicle trends and metrics in the UK
         </p>
-        <hr className="h-px my-4 bg-gray-400 border-0" />
-        <div className="flex m-2">
-          <AnnualGrowthRateOfEV />
-          <EVAdoptionRateCard />
+        <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+          <ul className="flex flex-wrap -mb-px">
+            <li className="me-2  cursor-pointer">
+              <a
+                onClick={() => setActiveTab("Dashboard")} // Set active tab to "Dashboard"
+                className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === "Dashboard"
+                  ? "text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500"
+                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                  }`}
+              >
+                Dashboard
+              </a>
+            </li>
+            <li className="me-2  cursor-pointer">
+              <a
+                onClick={() => setActiveTab("Charging Points")}
+                className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === "Charging Points"
+                  ? "border-blue-6000 text-blue-600"
+                  : "border-transparent hover:text-blue-500"
+                  }`}
+              >
+                Charging Points
+              </a>
+            </li>
+          </ul>
         </div>
-        <div className="flex">
-            <EVManufacturers />
-            <ProjectedEVGrowth />
+        {activeTab === "Dashboard" ?
+          <div>
+            <AnnualGrowthRateOfEV />
+            <div className="flex w-full">
+              <EVAdoptionRateCard />
+              <ProjectedEVGrowth />
+            </div>
+          </div> :
+          <div>
             <ChargingPoints />
-        </div>
-        <div>
-          <ForecastEVTrends />
-        </div>
+          </div>
+        }
       </div>
     </section>
   );
