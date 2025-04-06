@@ -8,15 +8,15 @@ provider:
     name: peanut-butter-serverless-deployment-bucket
 
 functions:
-  healthCheck:
-    timeout: 900
+  api:
     handler: wsgi_handler.handler
+    timeout: 900
     events:
       - http:
-          path: health
-          method: get
+          path: /{proxy+}
+          method: any
           cors: true
-
+          
 plugins:
   - serverless-wsgi
   - serverless-python-requirements

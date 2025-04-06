@@ -372,7 +372,5 @@ def generate_charger_risk_map(charging_df, risk_df, output_map="charging_port_ri
             popup=(f"<b>Segment:</b> {row['Segment']}<br><b>Risk:</b> {row['Risk Level']}")
         ).add_to(risk_map)
 
-    risk_map.save(output_map)
-    print(f"✅ Map saved to: {output_map}")
-    return output_map
-
+    print(f"✅ Map created")
+    return risk_map._repr_html_()

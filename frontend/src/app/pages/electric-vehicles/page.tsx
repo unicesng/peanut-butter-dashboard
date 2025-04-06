@@ -3,7 +3,6 @@
 import { AnnualGrowthRateOfEV } from "@/app/components/AnnualGrowthRateEV";
 import ChargingPoints from "@/app/components/ChargingPoints";
 import { EVAdoptionRateCard } from "@/app/components/EVAdoptionRateCard";
-import ForecastEVTrends from "@/app/components/ForecastEVTrends";
 import { ProjectedEVGrowth } from "@/app/components/ProjectedEVGrowth";
 import { useState } from "react";
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
 import {
@@ -21,35 +20,35 @@ import { useEffect, useState } from "react";
 import { GetEnergyFactors } from "@/api/energyApis";
 
 interface EnergyFactors {
-  factors: string;
-  percentage: number;
+  acorn: string;
+  avg: number;
   fill: string;
 }
 
 type EnergyFactorsChartData = EnergyFactors[];
 
 const chartConfig = {
-  percentage: {
-    label: "Percentage",
+  avg: {
+    label: "Mean Energy",
   },
-  income: {
-    label: "Income",
+  'ACORN-A': {
+    label: "A",
     color: "hsl(var(--chart-1))",
   },
-  location: {
-    label: "Location",
+  'ACORN-D': {
+    label: "D",
     color: "hsl(var(--chart-2))",
   },
-  houseType: {
-    label: "House Type",
+  'ACORN-': {
+    label: "-",
     color: "hsl(var(--chart-3))",
   },
-  weather: {
-    label: "Weather",
+  'ACORN-C': {
+    label: "C",
     color: "hsl(var(--chart-4))",
   },
-  other: {
-    label: "Other",
+  'ACORN-B': {
+    label: "B",
     color: "hsl(var(--chart-5))",
   },
 } satisfies ChartConfig;
@@ -63,14 +62,7 @@ export function EnergyFactorsChart() {
 
   const fetchData = async () => {
     try {
-      // const data = await GetEnergyFactors();
-      const data = [
-        { factors: "income", percentage: 25, fill: "var(--color-income)" },
-        { factors: "location", percentage: 10, fill: "var(--color-location)" },
-        { factors: "houseType", percentage: 18, fill: "var(--color-houseType)" },
-        { factors: "weather", percentage: 17, fill: "var(--color-weather)" },
-        { factors: "other", percentage: 9, fill: "var(--color-other)" },
-      ];
+      const data = await GetEnergyFactors();
       setChartData(data);
     } catch (error) {
       console.log(error);
@@ -94,7 +86,7 @@ export function EnergyFactorsChart() {
             }}
           >
             <YAxis
-              dataKey="factors"
+              dataKey="acorn"
               type="category"
               tickLine={false}
               tickMargin={10}
@@ -103,21 +95,18 @@ export function EnergyFactorsChart() {
                 chartConfig[value as keyof typeof chartConfig]?.label
               }
             />
-            <XAxis dataKey="percentage" type="number" hide />
+            <XAxis dataKey="avg" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="percentage" layout="vertical" radius={5} />
+            <Bar dataKey="avg" layout="vertical" radius={5} />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
         <div className="leading-none text-muted-foreground">
-          Showing total percentage for the last 6 months
+          Showing Household Mean Energy Consumption for the last 10 years
         </div>
       </CardFooter>
     </Card>
