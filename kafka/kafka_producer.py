@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 from collections import deque
 import argparse
+import sys
 
 # Kafka configuration will be set in the main function
 
@@ -342,7 +343,10 @@ class SmartMeterDataGenerator:
         if household["has_ev"] and ev_factor > 1.0:
             ev_consumption = total_consumption * (1 - 1/ev_factor)
             # Reduce other components proportionally
-            reduction_factor = 1 - (ev_consumption / total_consumption)
+            if total_consumption > 0:
+                reduction_factor = 1 - (ev_consumption / total_consumption)
+            else:
+                reduction_factor = 0  # or some default value that makes sense
             lighting_pct *= reduction_factor
             heating_pct *= reduction_factor
             kitchen_pct *= reduction_factor
