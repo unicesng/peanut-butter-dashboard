@@ -8,7 +8,7 @@ import numpy as np
 from collections import deque
 import argparse
 import sys
-
+from datetime import datetime, timedelta, timezone
 # Kafka configuration will be set in the main function
 
 # Kafka topics
@@ -103,7 +103,15 @@ class SmartMeterDataGenerator:
     def __init__(self):
         # Generate household metadata
         self.households = self._generate_households()
-        self.current_datetime = datetime.now().replace(second=0, microsecond=0)
+    
+        # Get current time in UTC+8 (Singapore timezone)
+        utc_now = datetime.now(timezone.utc)
+        singapore_tz = timezone(timedelta(hours=8))
+        singapore_now = utc_now.astimezone(singapore_tz)
+        
+        # Remove timezone info after conversion for compatibility with the rest of the code
+        self.current_datetime = singapore_now.replace(tzinfo=None, second=0, microsecond=0)
+        
         # Initialize with current time rounded to nearest 30 minutes
         minutes = self.current_datetime.minute
         self.current_datetime = self.current_datetime.replace(
@@ -181,7 +189,9 @@ class SmartMeterDataGenerator:
             
             # Generate data for this time point
             data_batch = self._generate_data_for_time()
-            
+            rand_multiplier = random.uniform(0.6, 1.4)  # ±40% variation
+            data_batch["aggregate_data"]["total_consumption_kwh"] *= rand_multiplier
+            data_batch["aggregate_data"]["average_consumption_kwh"] *= rand_multiplier
             # Add to historical data
             self.hourly_data.append(data_batch["aggregate_data"])
             
@@ -620,6 +630,10 @@ class SmartMeterDataGenerator:
         # Add additional analysis to the aggregate data
         data_batch["aggregate_data"]["historical_comparison"] = historical_comparisons
         data_batch["aggregate_data"]["peak_demand"] = peak_demand_info
+        for point in time_series_data:
+            variation = random.uniform(0.7, 1.3)  # ±30% variation
+            point["total_consumption_kwh"] *= variation
+            point["average_consumption_kwh"] *= variation
         data_batch["aggregate_data"]["time_series"] = time_series_data
         
         return data_batch

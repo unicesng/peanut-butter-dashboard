@@ -26,18 +26,18 @@ logger.info("Initializing Kafka consumers...")
 household_consumer = KafkaConsumer(
     HOUSEHOLD_TOPIC,
     bootstrap_servers=['54.159.249.207:9092'],
-    auto_offset_reset='earliest',
-    enable_auto_commit=True,
-    group_id='smart-meter-household-group',
+    auto_offset_reset='latest',
+    enable_auto_commit=False,
+    group_id='smart-meter-household-group2',
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
 )
 
 aggregate_consumer = KafkaConsumer(
     AGGREGATE_TOPIC,
     bootstrap_servers=['54.159.249.207:9092'],
-    auto_offset_reset='earliest',
-    enable_auto_commit=True,
-    group_id='smart-meter-aggregate-group',
+    auto_offset_reset='latest',
+    enable_auto_commit=False,
+    group_id='smart-meter-aggregate-group2',
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
 )
 
