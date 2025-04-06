@@ -22,15 +22,21 @@ async def annualGrowth():
     conn = get_redshift_connection()
     cursor = conn.cursor()
     query = """
-        SELECT *
-        FROM final_merged_data
+        SELECT year,
+            CAST(FLOOR(absolutechange) AS INTEGER) AS ev_absolute_change,
+            percentagechange
+        FROM dev.public.ev_growth;
     """
     cursor.execute(query)
     rows = cursor.fetchall()
 
     conn.close()
 
-    return rows
+    return ({
+             "year": row[0],
+             "absolutechange": row[1],
+             "percentagechange": row[2],
+        } for row in rows)
 
 @ev_app.get("/adoption-rate")
 async def adoptionRate():
@@ -47,7 +53,6 @@ async def adoptionRate():
     """
     cursor.execute(query)
     rows = cursor.fetchall()
-    row = rows[0]
 
     conn.close()
 
@@ -57,21 +62,6 @@ async def adoptionRate():
              "nonelectric": row[2],
              "adoptionrate": row[3]
         } for row in rows)
-
-@ev_app.get("/manufacturers")
-async def manufacturers():
-    conn = get_redshift_connection()
-    cursor = conn.cursor()
-    query = """
-        SELECT *
-        FROM final_merged_data
-    """
-    cursor.execute(query)
-    rows = cursor.fetchall()
-
-    conn.close()
-
-    return rows
 
 @ev_app.get("/projected-growth")
 async def projectedGrowth():

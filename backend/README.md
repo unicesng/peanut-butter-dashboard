@@ -3,6 +3,9 @@
 ```
 npm install
 ```
+```
+pip install -r requirements.txt
+```
 
 2. Configure AWS
 ```
@@ -11,7 +14,13 @@ aws configure
 
 3. Environment Variables
 
-4. Run Application locally
+
+4. Activate Virtual Environment (optional)
+```
+venv\Scripts\activate
+```
+
+5. Run Application locally
 ```
 cd app
 ```
@@ -19,7 +28,7 @@ cd app
 uvicorn main:app --reload
 ```
 
-5. Deploy service
+6. Deploy service
 ```
 serverless deploy
 ```

@@ -68,13 +68,20 @@ export function EVAdoptionRateCard() {
     : 0;
 
   return (
-    <Card className="w-1/2 m-2">
-      <CardHeader className="items-center pb-0 flex">
+    <Card className="m-2 w-1/3">
+      <CardHeader className="justify-between pb-0 flex">
         <div>
           <CardTitle>EV Adoption Rate</CardTitle>
           <CardDescription>{chartData[0]?.adoptionrate}% of all vehicles in the UK</CardDescription>
         </div>
-        <Select value={chosenYear.toString()} onValueChange={(value) => {setChosenYear(Number(value));}}>
+        <Select
+          value={chosenYear.toString()}
+          onValueChange={(value) => {
+            const year = Number(value);
+            setChosenYear(year);
+            setChartData(data.filter(row => row.year === year));
+          }}
+        >
           <SelectTrigger
             className="w-[160px] rounded-lg sm:ml-auto"
             aria-label="Select category"
@@ -90,10 +97,10 @@ export function EVAdoptionRateCard() {
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent className="flex flex-1 items-center pb-0 max-h-15">
+      <CardContent className="flex flex-1 items-center pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto w-full h-50"
+          className="mx-auto w-full"
         >
           <RadialBarChart
             data={chartData}

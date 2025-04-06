@@ -3,7 +3,6 @@
 import { AnnualGrowthRateOfEV } from "@/app/components/AnnualGrowthRateEV";
 import ChargingPoints from "@/app/components/ChargingPoints";
 import { EVAdoptionRateCard } from "@/app/components/EVAdoptionRateCard";
-import { EVManufacturers } from "@/app/components/EVManufacturers";
 import ForecastEVTrends from "@/app/components/ForecastEVTrends";
 import { ProjectedEVGrowth } from "@/app/components/ProjectedEVGrowth";
 import { useState } from "react";
@@ -48,16 +47,10 @@ export default function ElectricVehicles() {
         </div>
         {activeTab === "Dashboard" ?
           <div>
-            <div className="flex m-2">
-              <AnnualGrowthRateOfEV />
+            <AnnualGrowthRateOfEV />
+            <div className="flex w-full">
               <EVAdoptionRateCard />
-            </div>
-            <div className="flex m-2">
-              <EVManufacturers />
               <ProjectedEVGrowth />
-            </div>
-            <div>
-              <ForecastEVTrends />
             </div>
           </div> :
           <div>
