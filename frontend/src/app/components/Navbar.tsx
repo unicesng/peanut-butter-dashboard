@@ -8,7 +8,7 @@ export default function Navbar() {
   const [activeTab, setActiveTab] = useState("home");
 
   return (
-    <nav className="fixed top-0 w-full shadow-md bg-white border-gray-200 dark:bg-gray-900">
+    <nav className="fixed top-0 w-full z-50 shadow-md bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link href="/" className="flex">
           <Image src="/peanut-butter.png" alt="Logo" width={50} height={50} />
@@ -46,15 +46,15 @@ export default function Navbar() {
             </li>
             <li>
               <Link
-                href="/pages/dashboard"
+                href="/pages/monitoring"
                 className={`block py-2 px-3 rounded-sm md:p-0 text-lg ${
-                  activeTab === "dashboard"
+                  activeTab === "monitoring"
                     ? "text-blue-700 dark:text-blue-500"
                     : "text-black dark:text-white"
                 }`}
-                onClick={() => setActiveTab("dashboard")}
+                onClick={() => setActiveTab("monitoring")}
               >
-                Dashboard
+                Real-Time Monitoring
               </Link>
             </li>
           </ul>

@@ -5,17 +5,17 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const type = searchParams.get('type');
     try {
-        if (type === 'count') {
-            const count = await getHouseholdCount();
-            return NextResponse.json({ count });
-        } else if (type === 'anomaly') {
-            const anomalyCount = await getAnomalyCount();
-            return NextResponse.json({ anomalyCount });
-        } else if (type === 'avg') {
-            const avg = await getAverageConsumption();
-            return NextResponse.json({ average: avg })
+        if (type === 'consumption-by-acorn') {
+            const consumptionByAcorn = await getConsumptionByAcorn();
+            return NextResponse.json({ consumptionByAcorn });
+        } else if (type === 'latest-anomaly') {
+            const latestAnomaly = await getLatestAnomalyHouseholds();
+            return NextResponse.json({ latestAnomaly });
+        } else if (type === 'household-snapshot') {
+            const householdSnapshot = await getHouseholdSnapshot();
+            return NextResponse.json({ householdSnapshot });
         } else {
-            const result = await pool.query('SELECT * FROM household_readings');
+            const result = await pool.query('SELECT * FROM smart_meter_data.household_readings');
             return NextResponse.json(result.rows);
         }
     } catch (err) {
@@ -24,27 +24,42 @@ export async function GET(req: NextRequest) {
     }
 }
 
-async function getHouseholdCount(): Promise<number> {
+async function getConsumptionByAcorn(): Promise<any | null> {
     const result = await pool.query(`
-        SELECT COUNT(DISTINCT household_id) AS count
-        FROM household_readings
-    `);
-    return Number(result.rows[0].count);
-}
-
-async function getAnomalyCount(): Promise<number> {
-    const result = await pool.query(`
-        SELECT COUNT(*) AS count
-        FROM household_readings
-        WHERE is_anomaly = TRUE
-    `);
-    return Number(result.rows[0].count);
-}
-
-async function getAverageConsumption(): Promise<number> {
-    const result = await pool.query(`
-        SELECT AVG(consumption_kwh) AS avg
-        FROM household_readings
+        SELECT acorn_group, avg(consumption_kwh)
+        FROM smart_meter_data.household_readings
+        GROUP BY acorn_group
     `)
-    return Number(result.rows[0].avg);
+
+    if (result.rows.length === 0) return null
+
+    return result.rows
+}
+
+async function getLatestAnomalyHouseholds(): Promise<any | null> {
+    const result = await pool.query(`
+        SELECT * FROM smart_meter_data.household_readings
+        WHERE is_anomaly = true AND datetime = (
+            SELECT datetime FROM smart_meter_data.household_readings
+            WHERE is_anomaly = true
+            ORDER BY datetime DESC
+            LIMIT 1	
+        )
+    `)
+
+    if (result.rows.length === 0) return null
+
+    return result.rows
+}
+
+async function getHouseholdSnapshot(): Promise<any | null> {
+    const result = await pool.query(`
+        SELECT * FROM smart_meter_data.household_readings
+        ORDER BY consumption_kwh DESC
+        LIMIT 10
+    `)
+
+    if (result.rows.length === 0) return null
+
+    return result.rows
 }
