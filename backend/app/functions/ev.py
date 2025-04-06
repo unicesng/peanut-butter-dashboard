@@ -231,9 +231,9 @@ async def final_chargepoints(
     
     conn = get_redshift_connection()
 
-    query_charging = "SELECT * FROM public.EV_chargepoints"
-    query_energy = "SELECT * FROM public.energy_table_name"  # replace with actual table
-    query_segments = "SELECT * FROM public.segment_table_name"  # replace with actual table
+    query_charging = "SELECT * FROM public.suggested_locations"
+    query_energy = "SELECT * FROM public.avg_daily_energy_per_lclid"  # replace with actual table
+    query_segments = "SELECT * FROM public.acorn_segments"  # replace with actual table
 
     # Fetch rows from Redshift
     charging_rows = await conn.fetch(query_charging)
@@ -303,9 +303,9 @@ async def final_chargepoints(
 
     # Determine verdict
     if "Do Not Add" in combined_df["Risk Level"].values:
-        decision = "❌ Rejected – at least one segment exceeds 100% load increase"
+        decision = "❌ Rejected – at least one segment exceeds 30% load increase"
     elif "Caution" in combined_df["Risk Level"].values:
-        decision = "⚠️ Flagged – one or more segments exceed 50% load"
+        decision = "⚠️ Flagged – one or more segments exceed 15% load"
     else:
         decision = "✔️ Approved – all segments within acceptable range"
 
