@@ -161,12 +161,19 @@ async def energyFactors():
     cursor = conn.cursor()
     query = """
         SELECT 
-
-        FROM final_merged_data
+            day, 
+            SUM(energy_sum) AS energy_sum, 
+            SUM(predicted) AS predicted
+        FROM 
+            predicted_vs_actual
+        GROUP BY 
+            day;
     """
     cursor.execute(query)
     rows = cursor.fetchall()
 
     conn.close()
 
-    return 
+    return  [
+        {"day": row[0], "actual": row[1], "predicted": row[2] } for row in rows
+    ]

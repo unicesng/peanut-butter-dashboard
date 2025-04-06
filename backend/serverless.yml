@@ -16,7 +16,7 @@ functions:
           path: /{proxy+}
           method: any
           cors: true
-          
+
 plugins:
   - serverless-wsgi
   - serverless-python-requirements
@@ -40,3 +40,5 @@ package:
     - '**/__pycache__/**'
     - 'backend/.requirements/annotated_types/**'
     - 'backend/.requirements/pydantic/v1/annotation_types.py'  # Exclude the second conflicting file
+    - '**/*.venv/**'
+    - '**/venv/**'
