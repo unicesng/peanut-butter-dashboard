@@ -1,39 +1,36 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertCircle, CheckCircle, AlertTriangle, MapPin, Loader2 } from 'lucide-react';
+import { AlertCircle, AlertTriangle, MapPin, Loader2, ExternalLink } from 'lucide-react';
 import { GetFinalChargingPoints } from '@/api/evApis';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
-// Define proper TypeScript interfaces
-interface ChargingPoint {
-  Longitude: number;
-  Latitude: number;
-  Segment: string;
-  "Risk Level": RiskLevel;
+type RiskLevel = "Safe" | "Monitor" | "Caution" | "Do Not Add" | "Unclassified";
+
+interface ChargingData {
+  summary: SummaryData[];
+  decision: string;
+  map_file: string;
 }
 
-interface SegmentSummary {
+interface SummaryData {
   Segment: string;
-  "New Chargers": number;
   energy_sum: number;
+  "New Chargers": number;
   "New Load (kWh)": number;
   "New Total Load": number;
   "Increase (%)": number;
   "Risk Level": RiskLevel;
 }
 
-type RiskLevel = "Safe" | "Monitor" | "Caution" | "Do Not Add" | "Unclassified";
-
-interface ChargingData {
-  decision: string | string[];
-  chargingPoints: ChargingPoint[];
-  summary: SegmentSummary[];
-}
-
 const ChargingPoints = () => {
   const [data, setData] = useState<ChargingData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [chargingPointId, setChargingPointId] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -53,22 +50,14 @@ const ChargingPoints = () => {
     }
   };
 
-  const getDecisionIcon = (decision: string | string[]) => {
-    if (Array.isArray(decision)) {
-      if (decision.includes("Approved")) {
-        return <CheckCircle className="text-green-500 w-6 h-6" />;
-      } else if (decision.includes("Flagged")) {
-        return <AlertTriangle className="text-amber-500 w-6 h-6" />;
-      }
-      return <AlertCircle className="text-red-500 w-6 h-6" />;
+  const handleViewMap = () => {
+    if (data && data.map_file) {
+      const mapUrl = chargingPointId ?
+        `${data.map_file}?point=${encodeURIComponent(chargingPointId)}` :
+        data.map_file;
+
+      window.open(mapUrl, '_blank');
     }
-    
-    if (decision.includes("Approved")) {
-      return <CheckCircle className="text-green-500 w-6 h-6" />;
-    } else if (decision.includes("Flagged")) {
-      return <AlertTriangle className="text-amber-500 w-6 h-6" />;
-    }
-    return <AlertCircle className="text-red-500 w-6 h-6" />;
   };
 
   const getRiskBadge = (risk: RiskLevel) => {
@@ -79,24 +68,12 @@ const ChargingPoints = () => {
       "Do Not Add": "bg-red-500",
       "Unclassified": "bg-gray-500"
     };
-    
+
     return (
       <Badge className={`${colors[risk] || "bg-gray-500"} text-white`}>
         {risk}
       </Badge>
     );
-  };
-
-  const getRiskColor = (risk: RiskLevel) => {
-    const colors = {
-      "Safe": "text-green-500",
-      "Monitor": "text-blue-500",
-      "Caution": "text-amber-500",
-      "Do Not Add": "text-red-500",
-      "Unclassified": "text-gray-500"
-    };
-    
-    return colors[risk] || "text-gray-500";
   };
 
   if (loading) {
@@ -112,7 +89,7 @@ const ChargingPoints = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 rounded-lg border border-red-200">
+      <div className="p-6 bg-red-50 rounded-lg border border-red-200 m-2">
         <div className="flex items-center space-x-2 text-red-700">
           <AlertCircle className="w-6 h-6" />
           <h3 className="font-medium">Error loading data</h3>
@@ -124,7 +101,7 @@ const ChargingPoints = () => {
 
   if (!data) {
     return (
-      <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200">
+      <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200 m-2">
         <div className="flex items-center space-x-2 text-yellow-700">
           <AlertTriangle className="w-6 h-6" />
           <h3 className="font-medium">No data available</h3>
@@ -137,65 +114,8 @@ const ChargingPoints = () => {
   return (
     <div className="p-4 space-y-8">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xl font-bold">EV Charging Feasibility Assessment</CardTitle>
-          <div className="flex items-center space-x-2">
-            {getDecisionIcon(data.decision)}
-            <span className="font-medium">{Array.isArray(data.decision) ? data.decision.join(", ") : data.decision}</span>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {/* Map visualization */}
-          <div className="h-64 mb-4 relative bg-gray-100 rounded-md overflow-hidden">
-            <div className="absolute inset-0 p-2">
-              <div className="relative w-full h-full">
-                {data.chargingPoints.map((point, idx) => {
-                  // Calculate position based on coordinates
-                  const xPos = ((point.Longitude + 0.14) / 0.04) * 100;
-                  const yPos = (100 - ((point.Latitude - 51.5) / 0.04) * 100);
-                  
-                  return (
-                    <div 
-                      key={idx}
-                      className={`absolute ${getRiskColor(point["Risk Level"])}`}
-                      style={{ 
-                        left: `${xPos}%`, 
-                        top: `${yPos}%`,
-                        transform: 'translate(-50%, -100%)'
-                      }}
-                      title={`Segment: ${point.Segment}, Risk: ${point["Risk Level"]}`}
-                    >
-                      <MapPin className="w-6 h-6" />
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="absolute bottom-2 left-2 bg-white p-2 text-xs rounded shadow">
-                <div className="text-xs font-semibold mb-1">Risk Legend</div>
-                <div className="flex items-center mb-1">
-                  <MapPin className="text-green-500 w-4 h-4 mr-1" /> Safe
-                </div>
-                <div className="flex items-center mb-1">
-                  <MapPin className="text-blue-500 w-4 h-4 mr-1" /> Monitor
-                </div>
-                <div className="flex items-center mb-1">
-                  <MapPin className="text-amber-500 w-4 h-4 mr-1" /> Caution
-                </div>
-                <div className="flex items-center">
-                  <MapPin className="text-red-500 w-4 h-4 mr-1" /> Do Not Add
-                </div>
-              </div>
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-              Simplified Charging Location Map
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
         <CardHeader>
-          <CardTitle>Segment Analysis</CardTitle>
+          <CardTitle className="text-xl font-bold">Segment Analysis</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -228,6 +148,45 @@ const ChargingPoints = () => {
           </div>
         </CardContent>
       </Card>
+      {/* <Card>
+        <CardHeader>
+          <CardTitle>Generate Charging Point Map</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <p className="text-sm text-gray-500">Enter a specific charging point ID to highlight it on the map, or leave blank to view all points:</p>
+              <div className="flex space-x-2">
+                <Input
+                  placeholder="Enter Charging Point ID"
+                  value={chargingPointId}
+                  onChange={(e) => setChargingPointId(e.target.value)}
+                  className="max-w-md"
+                />
+                <Button onClick={handleViewMap} className="flex items-center">
+                  View Map <ExternalLink className="ml-2 w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded-md">
+              <h4 className="font-medium mb-2">Available Segment IDs</h4>
+              <div className="flex flex-wrap gap-2">
+                {data.summary.map((row, idx) => (
+                  <Badge
+                    key={idx}
+                    variant="outline"
+                    className="cursor-pointer hover:bg-gray-100"
+                    onClick={() => setChargingPointId(row.Segment)}
+                  >
+                    {row.Segment}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card> */}
     </div>
   );
 };

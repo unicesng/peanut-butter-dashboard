@@ -231,8 +231,6 @@ def get_chargepoints(n: int = 100):
     finally:
         conn.close()
 
-
-
 @ev_app.get("/final_chargepoints")
 def final_chargepoints(energy_per_charger_kwh: float = 40):
     print("🚀 Entered /final_chargepoints route")
@@ -360,7 +358,6 @@ def final_chargepoints(energy_per_charger_kwh: float = 40):
         "decision": decision,
         "map_file": map_url
     }
-
 
 # Helper: Generate map
 def generate_charger_risk_map(charging_df, risk_df, output_map="charging_port_risk_map.html"):

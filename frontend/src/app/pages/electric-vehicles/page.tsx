@@ -52,9 +52,7 @@ export default function ElectricVehicles() {
               <ProjectedEVGrowth />
             </div>
           </div> :
-          <div>
             <ChargingPoints />
-          </div>
         }
       </div>
     </section>
