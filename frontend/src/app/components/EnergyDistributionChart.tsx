@@ -120,7 +120,7 @@ export function EnergyDistributionChart() {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="leading-none text-muted-foreground">
-          Showing % of household with low, medium, high energy usage the last 6 months
+          Showing % of household with low, medium, high energy usage overall
         </div>
       </CardFooter>
     </Card>

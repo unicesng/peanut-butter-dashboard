@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from config import get_redshift_connection
+import pandas as pd
 
 # Create a FastAPI router instead of the app instance
 energy_app = APIRouter()
@@ -134,3 +135,61 @@ async def energyDistribution():
         {"category": "high", "count": high, "fill": "var(--color-high)"},
     ]
 
+
+@energy_app.get("/energy-factors")
+async def energyFactors():
+    conn = get_redshift_connection()
+    cursor = conn.cursor()
+    query = """
+        SELECT EXTRACT(YEAR FROM DAY) AS year, energy_mean, acorn, file as block, temperaturehigh, temperaturelow, humidity, windspeed, day_of_week, is_weekend, season 
+        FROM final_merged_data
+    """
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    columns = ['year', 'energy_mean', 'acorn', 'block', 'temperaturehigh', 'temperaturelow', 
+               'humidity', 'windspeed', 'day_of_week', 'is_weekend', 'season']
+    df = pd.DataFrame(rows, columns=columns)
+    
+    # Compute the correlation matrix
+    correlation_matrix = df.corr()
+
+    results = []
+
+    for column in correlation_matrix['energy_mean']:
+        correlation_value = column
+        if abs(correlation_value) > 0.7:
+            percentage = 100
+            fill = "var(--color-high)"
+        elif abs(correlation_value) > 0.3:
+            percentage = 50
+            fill = "var(--color-medium)"
+        else:
+            percentage = 25
+            fill = "var(--color-low)"
+        
+        results.append({
+            "category": column,
+            "percentage": percentage,
+            "fill": fill
+        })
+
+    conn.close()
+
+    return results[0:5]
+
+@energy_app.get("/projected-energy-consumption")
+async def energyFactors():
+    conn = get_redshift_connection()
+    cursor = conn.cursor()
+    query = """
+        SELECT 
+
+        FROM final_merged_data
+    """
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return 

@@ -66,7 +66,7 @@ export function EnergyConsumptionChart() {
     <Card className="w-1/3 m-2">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <CardTitle>Daily Energy Demand (kWh)</CardTitle>
-        <CardDescription>Based on ACORN Type</CardDescription>
+        <CardDescription>Based on ACORN Group Type</CardDescription>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger
             className="w-[160px] rounded-lg sm:ml-auto"

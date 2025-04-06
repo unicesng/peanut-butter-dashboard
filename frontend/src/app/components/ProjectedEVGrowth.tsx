@@ -41,7 +41,7 @@ const chartConfig = {
 
 export function ProjectedEVGrowth() {
   return (
-    <Card className="m-2 w-1/3">
+    <Card className="m-2 w-1/2">
       <CardHeader>
         <CardTitle>Projected EV Growth</CardTitle>
         <CardDescription>

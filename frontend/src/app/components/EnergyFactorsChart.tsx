@@ -17,13 +17,16 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { factors: "income", percentage: 25, fill: "var(--color-income)" },
-  { factors: "location", percentage: 10, fill: "var(--color-location)" },
-  { factors: "houseType", percentage: 18, fill: "var(--color-houseType)" },
-  { factors: "weather", percentage: 17, fill: "var(--color-weather)" },
-  { factors: "other", percentage: 9, fill: "var(--color-other)" },
-];
+import { useEffect, useState } from "react";
+import { GetEnergyFactors } from "@/api/energyApis";
+
+interface EnergyFactors {
+  factors: string;
+  percentage: number;
+  fill: string;
+}
+
+type EnergyFactorsChartData = EnergyFactors[];
 
 const chartConfig = {
   percentage: {
@@ -52,10 +55,32 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function EnergyFactorsChart() {
+  const [chartData, setChartData] = useState<EnergyFactorsChartData>([]);
+
+  useEffect(() => {
+    fetchData();
+  }, [])
+
+  const fetchData = async () => {
+    try {
+      // const data = await GetEnergyFactors();
+      const data = [
+        { factors: "income", percentage: 25, fill: "var(--color-income)" },
+        { factors: "location", percentage: 10, fill: "var(--color-location)" },
+        { factors: "houseType", percentage: 18, fill: "var(--color-houseType)" },
+        { factors: "weather", percentage: 17, fill: "var(--color-weather)" },
+        { factors: "other", percentage: 9, fill: "var(--color-other)" },
+      ];
+      setChartData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Card className="w-1/3 m-2">
       <CardHeader>
-        <CardTitle>Top Factors Affecting Household Energy Consumption</CardTitle>
+        <CardTitle>Top Household Types with Highest Average Energy Consumption</CardTitle>
         <CardDescription>Identifying energy patterns</CardDescription>
       </CardHeader>
       <CardContent>
