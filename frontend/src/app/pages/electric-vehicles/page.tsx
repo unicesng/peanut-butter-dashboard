@@ -35,7 +35,7 @@ export default function ElectricVehicles() {
             </li>
             <li className="me-2  cursor-pointer">
               <a
-                onClick={() => setActiveTab("Charging Points")} // Set active tab to "Charging Points"
+                onClick={() => setActiveTab("Charging Points")}
                 className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === "Charging Points"
                   ? "border-blue-6000 text-blue-600"
                   : "border-transparent hover:text-blue-500"
@@ -52,7 +52,7 @@ export default function ElectricVehicles() {
               <AnnualGrowthRateOfEV />
               <EVAdoptionRateCard />
             </div>
-            <div className="flex">
+            <div className="flex m-2">
               <EVManufacturers />
               <ProjectedEVGrowth />
             </div>

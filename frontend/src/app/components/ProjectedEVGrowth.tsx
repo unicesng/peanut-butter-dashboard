@@ -1,7 +1,7 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { TrendingDown, TrendingUp } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, LineChart, Line, XAxis } from "recharts";
 
 import {
   Card,
@@ -19,14 +19,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { month: "January", predicted: 186, actual: 80 },
-  { month: "February", predicted: 305, actual: 200 },
-  { month: "March", predicted: 237, actual: 120 },
-  { month: "April", predicted: 73, actual: 190 },
-  { month: "May", predicted: 209, actual: 130 },
-  { month: "June", predicted: 214, actual: 140 },
-];
+import { useEffect, useState } from "react";
+import { GetProjectedGrowth } from "@/api/evApis";
 
 const chartConfig = {
   predicted: {
@@ -39,18 +33,53 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+interface ProjectedEVGrowthChartData {
+  month: number;
+  predicted: number;
+  actual: number;
+}
+
 export function ProjectedEVGrowth() {
+
+  const [chartData, setChartData] = useState<ProjectedEVGrowthChartData[]>([]);
+
+  useEffect(() => {
+    fetchData();
+  }, [])
+
+  const fetchData = async () => {
+    try {
+      const data = await GetProjectedGrowth();
+      setChartData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const currentYear = new Date().getFullYear();
+  const currentYearData = chartData.find(data => data.month == currentYear);
+  const previousYearData = chartData.find(data => data.month === currentYear - 1);
+
+  let percentageChange = 0;
+
+  if (currentYearData && previousYearData && previousYearData.actual !== null) {
+    const currentActual = currentYearData.actual;
+    const previousActual = previousYearData.actual;
+
+    percentageChange = ((currentActual - previousActual) / previousActual) * 100;
+  }
+
   return (
     <Card className="m-2 w-1/2">
       <CardHeader>
         <CardTitle>Projected EV Growth</CardTitle>
         <CardDescription>
-          Showing total change for the last 6 months
+          Showing forecasted change for the next 5 years
         </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart
+          <LineChart
             accessibilityLayer
             data={chartData}
             margin={{
@@ -64,40 +93,38 @@ export function ProjectedEVGrowth() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
-            <Area
+            <Line
               dataKey="actual"
-              type="natural"
-              fill="var(--color-actual)"
-              fillOpacity={0.4}
+              type="monotone"
               stroke="var(--color-actual)"
-              stackId="a"
+              strokeWidth={2}
+              dot={false}
             />
-            <Area
+            <Line
               dataKey="predicted"
-              type="natural"
-              fill="var(--color-predicted)"
-              fillOpacity={0.4}
+              type="monotone"
               stroke="var(--color-predicted)"
-              stackId="a"
+              strokeWidth={2}
+              dot={false}
             />
             <ChartLegend content={<ChartLegendContent />} />
-          </AreaChart>
+          </LineChart>
         </ChartContainer>
       </CardContent>
       <CardFooter>
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Trending down by {percentageChange}% this year <TrendingDown className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
+              2015 - 2030
             </div>
           </div>
         </div>
