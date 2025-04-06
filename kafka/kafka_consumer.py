@@ -18,8 +18,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Kafka topic names
-HOUSEHOLD_TOPIC = 'smart-meter-readings-v2'
-AGGREGATE_TOPIC = 'aggregate-consumption-v2'
+HOUSEHOLD_TOPIC = 'smart-meter-readings'
+AGGREGATE_TOPIC = 'aggregate-consumption'
 
 # Configure Kafka consumer
 logger.info("Initializing Kafka consumers...")
@@ -56,9 +56,9 @@ logger.info("S3 client initialized for region us-east-1")
 # S3 bucket details - SAME BUCKET but NEW DIRECTORY PREFIX
 BUCKET_NAME = 'peanut-butter-project'
 # Updated directory prefixes to differentiate new data with primary keys
-HOUSEHOLD_PREFIX = 'smart-meter-data-v2/household/'
-AGGREGATE_PREFIX = 'smart-meter-data-v2/aggregate/'
-ANOMALY_PREFIX = 'smart-meter-data-v2/anomalies/'
+HOUSEHOLD_PREFIX = 'smart-meter-data/household/'
+AGGREGATE_PREFIX = 'smart-meter-data/aggregate/'
+ANOMALY_PREFIX = 'smart-meter-data/anomalies/'
 logger.info(f"Will store data in bucket: {BUCKET_NAME} under new prefixes")
 
 def upload_to_s3(data, prefix, timestamp, data_type):

@@ -712,7 +712,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='Smart Meter Data Generator for Kafka')
     
     parser.add_argument('--bootstrap-servers', 
-                        default='localhost:9092',
+                        default='54.159.249.207:9092',
                         help='Kafka bootstrap servers (comma-separated)')
     
     parser.add_argument('--interval', 
