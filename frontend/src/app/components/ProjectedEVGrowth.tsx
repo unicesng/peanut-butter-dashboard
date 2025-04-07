@@ -1,7 +1,7 @@
 "use client";
 
-import { TrendingDown, TrendingUp } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, LineChart, Line, XAxis } from "recharts";
+import { TrendingDown } from "lucide-react";
+import { CartesianGrid, LineChart, Line, XAxis } from "recharts";
 
 import {
   Card,

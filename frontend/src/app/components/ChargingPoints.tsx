@@ -30,7 +30,7 @@ const ChargingPoints = () => {
   const [data, setData] = useState<ChargingData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [chargingPointId, setChargingPointId] = useState('');
+  const [chargingPoints, setChargingPoints] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -51,13 +51,13 @@ const ChargingPoints = () => {
   };
 
   const handleViewMap = () => {
-    if (data && data.map_file) {
-      const mapUrl = chargingPointId ?
-        `${data.map_file}?point=${encodeURIComponent(chargingPointId)}` :
-        data.map_file;
+    // if (data && data.map_file) {
+    //   const mapUrl = chargingPointId ?
+    //     `${data.map_file}?point=${encodeURIComponent(chargingPointId)}` :
+    //     data.map_file;
 
-      window.open(mapUrl, '_blank');
-    }
+    //   window.open(mapUrl, '_blank');
+    // }
   };
 
   const getRiskBadge = (risk: RiskLevel) => {
@@ -148,19 +148,19 @@ const ChargingPoints = () => {
           </div>
         </CardContent>
       </Card>
-      {/* <Card>
+      <Card>
         <CardHeader>
           <CardTitle>Generate Charging Point Map</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="space-y-2">
-              <p className="text-sm text-gray-500">Enter a specific charging point ID to highlight it on the map, or leave blank to view all points:</p>
+              <p className="text-sm text-gray-500">Enter a specific number of charge points to highlight it on the map:</p>
               <div className="flex space-x-2">
                 <Input
-                  placeholder="Enter Charging Point ID"
-                  value={chargingPointId}
-                  onChange={(e) => setChargingPointId(e.target.value)}
+                  placeholder="Enter Number of Charging Points"
+                  value={chargingPoints}
+                  onChange={(e) => setChargingPoints(e.target.value)}
                   className="max-w-md"
                 />
                 <Button onClick={handleViewMap} className="flex items-center">
@@ -168,25 +168,9 @@ const ChargingPoints = () => {
                 </Button>
               </div>
             </div>
-
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h4 className="font-medium mb-2">Available Segment IDs</h4>
-              <div className="flex flex-wrap gap-2">
-                {data.summary.map((row, idx) => (
-                  <Badge
-                    key={idx}
-                    variant="outline"
-                    className="cursor-pointer hover:bg-gray-100"
-                    onClick={() => setChargingPointId(row.Segment)}
-                  >
-                    {row.Segment}
-                  </Badge>
-                ))}
-              </div>
-            </div>
           </div>
         </CardContent>
-      </Card> */}
+      </Card>
     </div>
   );
 };
