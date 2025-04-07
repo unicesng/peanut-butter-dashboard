@@ -3,10 +3,8 @@ from config import get_redshift_connection
 import pandas as pd
 import folium
 from shapely.geometry import Point, Polygon
-import numpy as np
 from scipy.cluster.vq import kmeans2
 import boto3
-import os
 
 # Create a FastAPI router instead of the app instance
 ev_app = APIRouter()
@@ -264,7 +262,6 @@ def final_chargepoints(energy_per_charger_kwh: float = 40):
 
     except Exception as e:
         print(f"❌ Error fetching data: {e}")
-        raise HTTPException(status_code=500, detail="Database query failed")
 
     if charging_df.empty or energy_df.empty or segments_df.empty:
         return {"error": "One or more input tables are empty."}

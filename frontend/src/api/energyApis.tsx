@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { report } from 'process';
 
 const s3Client = new S3Client({
   region: "us-east-1", 
@@ -90,7 +89,7 @@ export const GetReport = async () => {
         
         const s3ObjectKey = `reports/${reportId}.csv`;
     
-        // Step 3: Generate a presigned URL for the file from S3
+        // Generate a presigned URL for the file from S3
         const command = new GetObjectCommand({
           Bucket: "peanut-butter-project",
           Key: s3ObjectKey,

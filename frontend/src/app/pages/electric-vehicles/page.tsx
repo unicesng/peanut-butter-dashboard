@@ -46,11 +46,11 @@ export default function ElectricVehicles() {
         </div>
         {activeTab === "Dashboard" ?
           <div>
-            {/* <AnnualGrowthRateOfEV />
+            <AnnualGrowthRateOfEV />
             <div className="flex w-full">
               <EVAdoptionRateCard />
               <ProjectedEVGrowth />
-            </div> */}
+            </div>
           </div> :
           <ChargingPoints />
         }
